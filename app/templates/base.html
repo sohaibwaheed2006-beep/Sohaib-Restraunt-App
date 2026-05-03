@@ -54,7 +54,7 @@
     <div class="flash-container">
         {% for category, message in messages %}
         <div class="flash-message flash-{{ category }}">
-            <span>{{ message }}</span>
+            <span style="display: flex; align-items: center; gap: 15px;">{{ message|safe }}</span>
             <button class="flash-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
         </div>
         {% endfor %}

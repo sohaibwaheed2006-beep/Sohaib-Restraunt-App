@@ -39,12 +39,15 @@ def add_to_cart(item_id):
         db.session.add(cart_item)
 
     db.session.commit()
-    flash(f'{menu_item.name} added to cart!', 'success')
+    
+    img_html = f"<img src='{menu_item.image_url}' style='width: 45px; height: 45px; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'>"
+    msg = f"{img_html} <div><strong>{menu_item.name}</strong><br><small>Added to cart successfully!</small></div>"
+    flash(msg, 'success')
 
     # Return JSON if AJAX request
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         cart_count = sum(c.quantity for c in CartItem.query.filter_by(user_id=current_user.id).all())
-        return jsonify({'success': True, 'cart_count': cart_count, 'message': f'{menu_item.name} added to cart!'})
+        return jsonify({'success': True, 'cart_count': cart_count, 'message': msg})
 
     return redirect(request.referrer or url_for('menu.browse'))
 
