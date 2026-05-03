@@ -15,8 +15,8 @@
     <div style="display: flex; flex-direction: column;">
         <span style="background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; align-self: flex-start; margin-bottom: 15px;">{{ item.category.name }}</span>
         
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: white;">{{ item.name }}</h1>
-        <h2 style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;">Rs. {{ "%.0f"|format(item.price) }}</h2>
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">{{ item.name }}</h1>
+        <h2 id="main-price" style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;" data-base-price="{{ item.price }}">Rs. {{ "%.0f"|format(item.price) }}</h2>
         
         <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;">
             {{ item.description }}
@@ -30,17 +30,17 @@
                 <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
                     <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Select Size</h4>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Small|0" required> Small (Base Price)</label>
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Medium|200" required checked> Medium (+ Rs. 200)</label>
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Large|400" required> Large (+ Rs. 400)</label>
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Small|0" onchange="updatePrice()" required> Small (Rs. {{ "%.0f"|format(item.price) }})</label>
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Medium|200" onchange="updatePrice()" required checked> Medium (Rs. {{ "%.0f"|format(item.price + 200) }})</label>
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Large|400" onchange="updatePrice()" required> Large (Rs. {{ "%.0f"|format(item.price + 400) }})</label>
                     </div>
                 </div>
                 {% elif item.category.name == 'Burgers' or item.category_id == 1 %}
                 <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
                     <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Add-ons</h4>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Cheese|100"> Extra Cheese (+ Rs. 100)</label>
-                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Patty|300"> Extra Patty (+ Rs. 300)</label>
+                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Cheese|100" onchange="updatePrice()"> Extra Cheese (+ Rs. 100)</label>
+                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Patty|300" onchange="updatePrice()"> Extra Patty (+ Rs. 300)</label>
                     </div>
                 </div>
                 {% endif %}
@@ -96,4 +96,27 @@
     }
 }
 </style>
+</style>
+
+<script>
+function updatePrice() {
+    const basePrice = parseFloat(document.getElementById('main-price').getAttribute('data-base-price'));
+    let additionalPrice = 0;
+    
+    const sizeRadio = document.querySelector('input[name="size"]:checked');
+    if (sizeRadio) {
+        additionalPrice += parseFloat(sizeRadio.value.split('|')[1]);
+    }
+    
+    const addons = document.querySelectorAll('input[name="addon"]:checked');
+    addons.forEach(addon => {
+        additionalPrice += parseFloat(addon.value.split('|')[1]);
+    });
+    
+    document.getElementById('main-price').innerText = 'Rs. ' + (basePrice + additionalPrice);
+}
+
+document.addEventListener("DOMContentLoaded", updatePrice);
+</script>
+
 {% endblock %}
