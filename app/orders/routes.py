@@ -18,7 +18,7 @@ def checkout():
         flash('Your cart is empty. Add items before checkout.', 'info')
         return redirect(url_for('menu.browse'))
 
-    total = sum(item.menu_item.price * item.quantity for item in cart_items)
+    total = sum((item.menu_item.price + (item.options_total or 0)) * item.quantity for item in cart_items)
 
     if request.method == 'POST':
         delivery_address = request.form.get('delivery_address', '').strip()
@@ -54,7 +54,9 @@ def checkout():
                 order_id=order.id,
                 item_id=cart_item.item_id,
                 quantity=cart_item.quantity,
-                price=cart_item.menu_item.price
+                price=cart_item.menu_item.price,
+                options=cart_item.options,
+                options_total=cart_item.options_total
             )
             db.session.add(order_item)
 

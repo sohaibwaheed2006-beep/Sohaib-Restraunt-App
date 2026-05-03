@@ -87,6 +87,8 @@ class CartItem(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey('menu_items.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
+    options = db.Column(db.String(500))
+    options_total = db.Column(db.Float, default=0.0)
 
     # Relationships
     menu_item = db.relationship('MenuItem', backref='cart_entries', lazy=True)
@@ -148,6 +150,8 @@ class OrderItem(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('menu_items.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    options = db.Column(db.String(500))
+    options_total = db.Column(db.Float, default=0.0)
 
     # Relationships
     menu_item = db.relationship('MenuItem', backref='order_entries', lazy=True)
@@ -155,7 +159,8 @@ class OrderItem(db.Model):
     @property
     def subtotal(self):
         """Calculate subtotal for this order item."""
-        return self.price * self.quantity
+        opt_total = self.options_total if self.options_total else 0.0
+        return (self.price + opt_total) * self.quantity
 
     def __repr__(self):
         return f'<OrderItem order={self.order_id} item={self.item_id}>'

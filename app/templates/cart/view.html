@@ -26,10 +26,15 @@
                         <td style="padding: 15px; border-bottom: 1px solid var(--border);">
                             <div style="display: flex; align-items: center; gap: 15px;">
                                 <img src="{{ item.menu_item.image_url }}" alt="{{ item.menu_item.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" onerror="this.src='/static/images/default_food.jpg'">
-                                <span style="font-weight: 500;">{{ item.menu_item.name }}</span>
+                                <div>
+                                    <h3 style="margin-bottom: 5px; font-size: 1.2rem;">{{ item.menu_item.name }}</h3>
+                                    {% if item.options %}
+                                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">{{ item.options }}</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </td>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border);">Rs. {{ "%.0f"|format(item.menu_item.price) }}</td>
+                        <td style="padding: 15px; border-bottom: 1px solid var(--border);">Rs. {{ "%.0f"|format(item.menu_item.price + (item.options_total or 0)) }}</td>
                         <td style="padding: 15px; border-bottom: 1px solid var(--border);">
                             <form action="{{ url_for('cart.update_cart', cart_item_id=item.id) }}" method="POST" style="display: flex; align-items: center; gap: 10px;">
                                 <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px; padding: 5px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; border-radius: 4px;">
@@ -37,7 +42,9 @@
                             </form>
                         </td>
                         <td style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: bold;">
-                            Rs. {{ "%.0f"|format(item.menu_item.price * item.quantity) }}
+                            <div style="font-weight: bold; font-size: 1.1rem; min-width: 100px;">
+                                Rs. {{ "%.0f"|format((item.menu_item.price + (item.options_total or 0)) * item.quantity) }}
+                            </div>
                         </td>
                         <td style="padding: 15px; border-bottom: 1px solid var(--border); text-align: right;">
                             <form action="{{ url_for('cart.remove_from_cart', cart_item_id=item.id) }}" method="POST">

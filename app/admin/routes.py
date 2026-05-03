@@ -193,3 +193,21 @@ def delete_category(cat_id):
     db.session.commit()
     flash(f'Category "{name}" deleted.', 'info')
     return redirect(url_for('admin.manage_categories'))
+
+@admin_bp.route('/upgrade_db')
+@admin_required
+def upgrade_db():
+    """Upgrade database schema with new columns for options."""
+    from sqlalchemy import text
+    try:
+        db.session.execute(text('ALTER TABLE cart_items ADD COLUMN options VARCHAR(500)'))
+        db.session.execute(text('ALTER TABLE cart_items ADD COLUMN options_total FLOAT DEFAULT 0.0'))
+        db.session.execute(text('ALTER TABLE order_items ADD COLUMN options VARCHAR(500)'))
+        db.session.execute(text('ALTER TABLE order_items ADD COLUMN options_total FLOAT DEFAULT 0.0'))
+        db.session.commit()
+        flash('Database upgraded successfully with Options support!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        # Might already exist
+        flash(f'Database might already be upgraded or error: {e}', 'info')
+    return redirect(url_for('admin.dashboard'))

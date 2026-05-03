@@ -13,7 +13,7 @@ cart_bp = Blueprint('cart', __name__, url_prefix='/cart')
 def view_cart():
     """View shopping cart."""
     cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
-    total = sum(item.menu_item.price * item.quantity for item in cart_items)
+    total = sum((item.menu_item.price + (item.options_total or 0)) * item.quantity for item in cart_items)
     return render_template('cart/view.html', cart_items=cart_items, total=total)
 
 
@@ -30,12 +30,35 @@ def add_to_cart(item_id):
     if quantity < 1:
         quantity = 1
 
+    size_option = request.form.get('size')
+    addons = request.form.getlist('addon')
+    
+    options_list = []
+    options_total = 0.0
+    
+    if size_option:
+        name, price_str = size_option.split('|')
+        price = float(price_str)
+        if price > 0:
+            options_list.append(f"{name} (+Rs. {price:.0f})")
+        else:
+            options_list.append(f"{name}")
+        options_total += price
+        
+    for addon in addons:
+        name, price_str = addon.split('|')
+        price = float(price_str)
+        options_list.append(f"{name} (+Rs. {price:.0f})")
+        options_total += price
+        
+    options_str = ", ".join(options_list) if options_list else None
+
     # Check if already in cart
-    cart_item = CartItem.query.filter_by(user_id=current_user.id, item_id=item_id).first()
+    cart_item = CartItem.query.filter_by(user_id=current_user.id, item_id=item_id, options=options_str).first()
     if cart_item:
         cart_item.quantity += quantity
     else:
-        cart_item = CartItem(user_id=current_user.id, item_id=item_id, quantity=quantity)
+        cart_item = CartItem(user_id=current_user.id, item_id=item_id, quantity=quantity, options=options_str, options_total=options_total)
         db.session.add(cart_item)
 
     db.session.commit()

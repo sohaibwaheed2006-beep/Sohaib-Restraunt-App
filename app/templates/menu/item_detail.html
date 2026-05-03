@@ -24,7 +24,28 @@
         
         <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
             {% if current_user.is_authenticated %}
-            <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" style="display: flex; gap: 20px; align-items: center;" class="add-to-cart-form">
+            <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form">
+                
+                {% if item.category.name == 'Pizza' or item.category_id == 3 %}
+                <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                    <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Select Size</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Small|0" required> Small (Base Price)</label>
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Medium|200" required checked> Medium (+ Rs. 200)</label>
+                        <label style="cursor: pointer;"><input type="radio" name="size" value="Large|400" required> Large (+ Rs. 400)</label>
+                    </div>
+                </div>
+                {% elif item.category.name == 'Burgers' or item.category_id == 1 %}
+                <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                    <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Add-ons</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Cheese|100"> Extra Cheese (+ Rs. 100)</label>
+                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Patty|300"> Extra Patty (+ Rs. 300)</label>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div style="display: flex; gap: 20px; align-items: center;">
                 <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.2);">
                     <button type="button" onclick="const q=document.getElementById('quantity'); q.value=Math.max(1, parseInt(q.value)-1);" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-minus"></i></button>
                     <input type="number" id="quantity" name="quantity" value="1" min="1" style="background: none; border: none; color: white; width: 50px; text-align: center; font-size: 1.2rem; font-weight: bold; outline: none;">
@@ -34,6 +55,7 @@
                 <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;">
                     <i class="bi bi-cart-plus-fill"></i> Add to Cart
                 </button>
+                </div>
             </form>
             {% else %}
             <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
