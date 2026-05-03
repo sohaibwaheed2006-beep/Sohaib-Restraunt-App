@@ -93,11 +93,11 @@
         <p class="hero-subtitle">Taste beyond expectations. Premium quality food delivered fast.</p>
         <div style="display: flex; gap: 20px; justify-content: center;">
             <a href="{{ url_for('menu.browse') }}" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 30px;">
-                <i class="fas fa-utensils"></i> Explore Menu
+                <i class="bi bi-basket2-fill"></i> Explore Menu
             </a>
             {% if not current_user.is_authenticated %}
             <a href="{{ url_for('auth.register') }}" class="btn btn-outline" style="font-size: 1.2rem; padding: 15px 30px;">
-                <i class="fas fa-user-plus"></i> Join Now
+                <i class="bi bi-person-fill-plus"></i> Join Now
             </a>
             {% endif %}
         </div>
@@ -106,7 +106,7 @@
 
 <!-- Categories -->
 <section>
-    <h2 class="section-title"><i class="fas fa-list-alt" style="color: var(--primary);"></i> Browse Categories</h2>
+    <h2 class="section-title"><i class="bi bi-list-ul" style="color: var(--primary);"></i> Browse Categories</h2>
     <div class="category-grid">
         {% for cat in categories %}
         <a href="{{ url_for('menu.browse', category=cat.id) }}" class="category-card">
@@ -121,7 +121,7 @@
 
 <!-- Popular Items -->
 <section style="margin-top: 60px;">
-    <h2 class="section-title"><i class="fas fa-fire-flame-curved" style="color: var(--primary);"></i> Popular Now</h2>
+    <h2 class="section-title"><i class="bi bi-fire-flame-curved" style="color: var(--primary);"></i> Popular Now</h2>
     <div class="grid-cards">
         {% for item in popular_items %}
         <div class="card">
@@ -143,12 +143,12 @@
                 <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form">
                     <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="btn btn-primary" style="width: 100%;">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
+                        <i class="bi bi-cart-plus-fill"></i> Add to Cart
                     </button>
                 </form>
                 {% else %}
                 <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-outline" style="width: 100%;">
-                    <i class="fas fa-sign-in-alt"></i> Login to Order
+                    <i class="bi bi-box-arrow-in-right"></i> Login to Order
                 </a>
                 {% endif %}
             </div>

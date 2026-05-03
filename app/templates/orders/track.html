@@ -64,7 +64,7 @@
 
 {% block content %}
 <div style="margin-bottom: 20px;">
-    <a href="{{ url_for('orders.history') }}" style="color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Back to Orders</a>
+    <a href="{{ url_for('orders.history') }}" style="color: var(--text-muted);"><i class="bi bi-arrow-left"></i> Back to Orders</a>
 </div>
 
 <div class="form-container" style="max-width: 800px;">
@@ -94,11 +94,11 @@
                     <span>Pending</span>
                 </div>
                 <div class="status-point {% if order.status_percentage >= 25 %}active{% endif %}">
-                    <i class="fas fa-check-circle"></i>
+                    <i class="bi bi-check-lg-circle"></i>
                     <span>Confirmed</span>
                 </div>
                 <div class="status-point {% if order.status_percentage >= 50 %}active{% endif %}">
-                    <i class="fas fa-fire"></i>
+                    <i class="bi bi-fire"></i>
                     <span>Preparing</span>
                 </div>
                 <div class="status-point {% if order.status_percentage >= 75 %}active{% endif %}">
@@ -106,7 +106,7 @@
                     <span>On the Way</span>
                 </div>
                 <div class="status-point {% if order.status_percentage >= 100 %}active{% endif %}">
-                    <i class="fas fa-box-open"></i>
+                    <i class="bi bi-box-seam-open"></i>
                     <span>Delivered</span>
                 </div>
             </div>
@@ -114,7 +114,7 @@
     </div>
     {% else %}
     <div style="padding: 20px; background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger); border-radius: var(--radius); text-align: center; margin-bottom: 30px;">
-        <i class="fas fa-times-circle" style="font-size: 3rem; color: var(--danger); margin-bottom: 10px;"></i>
+        <i class="bi bi-x-lg-circle" style="font-size: 3rem; color: var(--danger); margin-bottom: 10px;"></i>
         <h3 style="color: var(--danger); margin-bottom: 5px;">Order Cancelled</h3>
         <p style="color: var(--text-muted);">This order has been cancelled. If you have questions, please contact support.</p>
     </div>
@@ -154,16 +154,16 @@
         <div>
             <h3 style="margin-bottom: 15px;">Delivery Info</h3>
             <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
-                <p style="margin-bottom: 10px;"><strong><i class="fas fa-map-marker-alt" style="color: var(--primary); width: 20px;"></i> Address:</strong><br>
+                <p style="margin-bottom: 10px;"><strong><i class="bi bi-geo-alt-fill" style="color: var(--primary); width: 20px;"></i> Address:</strong><br>
                 <span style="color: var(--text-muted);">{{ order.delivery_address }}</span></p>
                 
-                <p style="margin-bottom: 10px;"><strong><i class="fas fa-phone" style="color: var(--primary); width: 20px;"></i> Phone:</strong><br>
+                <p style="margin-bottom: 10px;"><strong><i class="bi bi-telephone-fill" style="color: var(--primary); width: 20px;"></i> Phone:</strong><br>
                 <span style="color: var(--text-muted);">{{ order.phone }}</span></p>
                 
                 <p><strong><i class="fas fa-credit-card" style="color: var(--primary); width: 20px;"></i> Payment:</strong><br>
                 <span style="color: var(--text-muted); text-transform: capitalize;">{{ order.payment_method }}</span>
                 {% if order.payment and order.payment.status == 'completed' %}
-                    <span style="color: var(--success); font-size: 0.8rem; margin-left: 5px;"><i class="fas fa-check-circle"></i> Paid</span>
+                    <span style="color: var(--success); font-size: 0.8rem; margin-left: 5px;"><i class="bi bi-check-lg-circle"></i> Paid</span>
                 {% else %}
                     <span style="color: var(--warning); font-size: 0.8rem; margin-left: 5px;"><i class="fas fa-exclamation-circle"></i> Unpaid</span>
                 {% endif %}

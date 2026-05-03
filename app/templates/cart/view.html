@@ -3,7 +3,7 @@
 {% block title %}Shopping Cart{% endblock %}
 
 {% block content %}
-<h1 style="margin-bottom: 30px;"><i class="fas fa-shopping-cart"></i> Your Cart</h1>
+<h1 style="margin-bottom: 30px;"><i class="bi bi-cart-fill"></i> Your Cart</h1>
 
 {% if cart_items %}
 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
@@ -41,7 +41,7 @@
                         </td>
                         <td style="padding: 15px; border-bottom: 1px solid var(--border); text-align: right;">
                             <form action="{{ url_for('cart.remove_from_cart', cart_item_id=item.id) }}" method="POST">
-                                <button type="submit" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem;"><i class="fas fa-trash-alt"></i></button>
+                                <button type="submit" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem;"><i class="bi bi-trash-fill-alt"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -51,10 +51,10 @@
         </div>
         
         <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-            <a href="{{ url_for('menu.browse') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+            <a href="{{ url_for('menu.browse') }}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
             <form action="{{ url_for('cart.clear_cart') }}" method="POST">
                 <button type="submit" class="btn" style="background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger);">
-                    <i class="fas fa-trash"></i> Clear Cart
+                    <i class="bi bi-trash-fill"></i> Clear Cart
                 </button>
             </form>
         </div>

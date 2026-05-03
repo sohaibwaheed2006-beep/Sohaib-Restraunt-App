@@ -73,7 +73,7 @@
             </a>
             {% for cat in categories %}
             <a href="{{ url_for('menu.browse', category=cat.id) }}" class="cat-link {% if active_category and active_category.id == cat.id %}active{% endif %}">
-                <i class="fas fa-utensils"></i> {{ cat.name }}
+                <i class="bi bi-basket2-fill"></i> {{ cat.name }}
             </a>
             {% endfor %}
         </div>
@@ -116,19 +116,19 @@
                     <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form">
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
+                            <i class="bi bi-cart-plus-fill"></i> Add to Cart
                         </button>
                     </form>
                     {% else %}
                     <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-outline" style="width: 100%;">
-                        <i class="fas fa-sign-in-alt"></i> Login to Order
+                        <i class="bi bi-box-arrow-in-right"></i> Login to Order
                     </a>
                     {% endif %}
                 </div>
             </div>
             {% else %}
             <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: var(--bg-card); border-radius: var(--radius);">
-                <i class="fas fa-box-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 20px;"></i>
+                <i class="bi bi-box-seam-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 20px;"></i>
                 <h2>No items found.</h2>
                 <p style="color: var(--text-muted);">Try a different category or search term.</p>
                 <a href="{{ url_for('menu.browse') }}" class="btn btn-primary" style="margin-top: 20px;">View Full Menu</a>

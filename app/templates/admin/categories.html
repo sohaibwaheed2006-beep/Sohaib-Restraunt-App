@@ -5,10 +5,10 @@
 {% block content %}
 <div class="admin-layout">
     <aside class="admin-sidebar">
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-shield-halved"></i> Admin Panel</h3>
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="bi bi-shield-lock-fill"></i> Admin Panel</h3>
         <div class="admin-nav">
             <a href="{{ url_for('admin.dashboard') }}" class="admin-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="bi bi-receipt"></i> Orders</a>
             <a href="{{ url_for('admin.manage_items') }}" class="admin-link"><i class="fas fa-hamburger"></i> Menu Items</a>
             <a href="{{ url_for('admin.manage_categories') }}" class="admin-link active"><i class="fas fa-list"></i> Categories</a>
         </div>
@@ -34,7 +34,7 @@
                         <label>Description</label>
                         <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-plus"></i> Add</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="bi bi-plus-lg"></i> Add</button>
                 </form>
             </div>
             
@@ -61,7 +61,7 @@
                             <td style="padding: 15px; border-bottom: 1px solid var(--border);">
                                 <form action="{{ url_for('admin.delete_category', cat_id=cat.id) }}" method="POST" onsubmit="return confirm('Warning: Deleting a category will also delete ALL items in it. Are you sure?');">
                                     <button type="submit" class="btn btn-sm" style="background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger);">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </form>
                             </td>

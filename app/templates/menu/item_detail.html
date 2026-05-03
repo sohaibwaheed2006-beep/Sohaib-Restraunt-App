@@ -4,7 +4,7 @@
 
 {% block content %}
 <div style="margin-bottom: 20px;">
-    <a href="{{ url_for('menu.browse', category=item.category_id) }}" style="color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Back to {{ item.category.name }}</a>
+    <a href="{{ url_for('menu.browse', category=item.category_id) }}" style="color: var(--text-muted);"><i class="bi bi-arrow-left"></i> Back to {{ item.category.name }}</a>
 </div>
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: var(--bg-card); padding: 30px; border-radius: var(--radius); border: 1px solid var(--border);">
@@ -28,16 +28,16 @@
                 <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.2);">
                     <button type="button" onclick="const q=document.getElementById('quantity'); q.value=Math.max(1, parseInt(q.value)-1);" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-minus"></i></button>
                     <input type="number" id="quantity" name="quantity" value="1" min="1" style="background: none; border: none; color: white; width: 50px; text-align: center; font-size: 1.2rem; font-weight: bold; outline: none;">
-                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=parseInt(q.value)+1;" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-plus"></i></button>
+                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=parseInt(q.value)+1;" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="bi bi-plus-lg"></i></button>
                 </div>
                 
                 <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;">
-                    <i class="fas fa-cart-plus"></i> Add to Cart
+                    <i class="bi bi-cart-plus-fill"></i> Add to Cart
                 </button>
             </form>
             {% else %}
             <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
-                <i class="fas fa-sign-in-alt"></i> Login to Order
+                <i class="bi bi-box-arrow-in-right"></i> Login to Order
             </a>
             {% endif %}
         </div>

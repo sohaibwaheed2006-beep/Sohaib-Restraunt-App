@@ -80,10 +80,10 @@
 {% block content %}
 <div class="admin-layout">
     <aside class="admin-sidebar">
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-shield-halved"></i> Admin Panel</h3>
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="bi bi-shield-lock-fill"></i> Admin Panel</h3>
         <div class="admin-nav">
             <a href="{{ url_for('admin.dashboard') }}" class="admin-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="bi bi-receipt"></i> Orders</a>
             <a href="{{ url_for('admin.manage_items') }}" class="admin-link"><i class="fas fa-hamburger"></i> Menu Items</a>
             <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
         </div>
@@ -105,7 +105,7 @@
             
             <div class="stat-card">
                 <div class="stat-icon" style="background: rgba(52, 152, 219, 0.2); color: var(--info);">
-                    <i class="fas fa-box"></i>
+                    <i class="bi bi-box-seam"></i>
                 </div>
                 <div>
                     <h3 style="font-size: 1.5rem; margin: 0;">{{ total_orders }}</h3>
@@ -125,7 +125,7 @@
             
             <div class="stat-card">
                 <div class="stat-icon" style="background: rgba(155, 89, 182, 0.2); color: #9b59b6;">
-                    <i class="fas fa-users"></i>
+                    <i class="bi bi-person-fills"></i>
                 </div>
                 <div>
                     <h3 style="font-size: 1.5rem; margin: 0;">{{ total_users }}</h3>
