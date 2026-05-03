@@ -1,6 +1,7 @@
 """Menu routes: Browse items, Search, Item detail."""
 
 from flask import Blueprint, render_template, request
+from sqlalchemy import or_
 from app.models import Category, MenuItem
 
 menu_bp = Blueprint('menu', __name__, url_prefix='/menu')
@@ -30,9 +31,14 @@ def search():
     categories = Category.query.all()
 
     if query:
-        items = MenuItem.query.filter(
+        search_pattern = f'%{query}%'
+        items = MenuItem.query.join(Category).filter(
             MenuItem.is_available == True,  # noqa: E712
-            MenuItem.name.ilike(f'%{query}%')
+            or_(
+                MenuItem.name.ilike(search_pattern),
+                MenuItem.description.ilike(search_pattern),
+                Category.name.ilike(search_pattern)
+            )
         ).all()
     else:
         items = []
