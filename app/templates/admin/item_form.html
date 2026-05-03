@@ -1,0 +1,69 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}{{ action }} Item{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <!-- sidebar omitted for brevity, matches others -->
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-shield-halved"></i> Admin Panel</h3>
+        <div class="admin-nav">
+            <a href="{{ url_for('admin.dashboard') }}" class="admin-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="{{ url_for('admin.manage_items') }}" class="admin-link active"><i class="fas fa-hamburger"></i> Menu Items</a>
+            <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
+        </div>
+    </aside>
+
+    <div class="admin-content">
+        <h1 style="margin-bottom: 30px;">{{ action }} Menu Item</h1>
+        
+        <div class="form-container" style="max-width: 100%; margin: 0;">
+            <form method="POST">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" name="name" class="form-control" required value="{{ item.name if item else '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Price (Rs.)</label>
+                        <input type="number" name="price" step="0.01" class="form-control" required value="{{ item.price if item else '' }}">
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="category_id" class="form-control" required style="background-color: var(--secondary-light);">
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if item and item.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Image URL (e.g. /static/images/burger.jpg)</label>
+                        <input type="text" name="image_url" class="form-control" value="{{ item.image_url if item else '' }}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" rows="4">{{ item.description if item else '' }}</textarea>
+                </div>
+                
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" name="is_available" id="is_available" {% if not item or item.is_available %}checked{% endif %} style="width: 20px; height: 20px; accent-color: var(--primary);">
+                    <label for="is_available" style="margin: 0; font-weight: bold; cursor: pointer;">Item is currently available for ordering</label>
+                </div>
+                
+                <div style="margin-top: 30px; display: flex; gap: 15px;">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Item</button>
+                    <a href="{{ url_for('admin.manage_items') }}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 600px;">
+    <h2 style="text-align: center; margin-bottom: 20px; font-size: 2rem;">Join Sohaib Restaurant</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Create an account to start ordering delicious food!</p>
+    
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required value="{{ username|default('') }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" name="phone" class="form-control" required value="{{ phone|default('') }}" placeholder="e.g. 03001234567">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" required value="{{ email|default('') }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="address">Delivery Address (Optional, can add later)</label>
+            <textarea id="address" name="address" class="form-control" rows="3">{{ address|default('') }}</textarea>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" required minlength="6">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
+            <i class="fas fa-user-plus"></i> Create Account
+        </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 25px; color: var(--text-muted);">
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}" style="color: var(--primary); font-weight: bold;">Log in here</a></p>
+    </div>
+</div>
+{% endblock %}

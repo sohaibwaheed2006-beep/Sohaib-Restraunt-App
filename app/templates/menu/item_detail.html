@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.name }} - Menu{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('menu.browse', category=item.category_id) }}" style="color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Back to {{ item.category.name }}</a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: var(--bg-card); padding: 30px; border-radius: var(--radius); border: 1px solid var(--border);">
+    <div>
+        <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 100%; border-radius: var(--radius); box-shadow: var(--shadow);" onerror="this.src='/static/images/default_food.jpg'">
+    </div>
+    
+    <div style="display: flex; flex-direction: column;">
+        <span style="background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; align-self: flex-start; margin-bottom: 15px;">{{ item.category.name }}</span>
+        
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: white;">{{ item.name }}</h1>
+        <h2 style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;">Rs. {{ "%.0f"|format(item.price) }}</h2>
+        
+        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;">
+            {{ item.description }}
+        </p>
+        
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
+            {% if current_user.is_authenticated %}
+            <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" style="display: flex; gap: 20px; align-items: center;" class="add-to-cart-form">
+                <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.2);">
+                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=Math.max(1, parseInt(q.value)-1);" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-minus"></i></button>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1" style="background: none; border: none; color: white; width: 50px; text-align: center; font-size: 1.2rem; font-weight: bold; outline: none;">
+                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=parseInt(q.value)+1;" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-plus"></i></button>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+            </form>
+            {% else %}
+            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                <i class="fas fa-sign-in-alt"></i> Login to Order
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if related_items %}
+<div style="margin-top: 60px;">
+    <h2 class="section-title">You might also like</h2>
+    <div class="grid-cards">
+        {% for rel_item in related_items %}
+        <div class="card">
+            <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}">
+                <img src="{{ rel_item.image_url }}" alt="{{ rel_item.name }}" class="card-img" onerror="this.src='/static/images/default_food.jpg'">
+            </a>
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                    <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}">
+                        <h3 style="font-size: 1.1rem;">{{ rel_item.name }}</h3>
+                    </a>
+                    <span style="color: var(--accent); font-weight: bold;">Rs. {{ "%.0f"|format(rel_item.price) }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

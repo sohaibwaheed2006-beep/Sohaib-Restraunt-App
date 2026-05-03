@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 600px; text-align: center;">
+    <h1 style="margin-bottom: 20px;"><i class="fas fa-credit-card"></i> Complete Payment</h1>
+    
+    <p style="color: var(--text-muted); margin-bottom: 30px;">
+        Order #{{ order.id }} • Total: <span style="font-weight: bold; color: white;">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+    </p>
+
+    <!-- Simulated Payment Form -->
+    <form method="POST" action="{{ url_for('payment.pay', order_id=order.id) }}" style="text-align: left;">
+        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
+            <div class="form-group">
+                <label>Card Number</label>
+                <div style="position: relative;">
+                    <i class="far fa-credit-card" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
+                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" style="padding-left: 40px;" required>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="text" class="form-control" placeholder="MM/YY" required>
+                </div>
+                <div class="form-group">
+                    <label>CVC</label>
+                    <input type="password" class="form-control" placeholder="123" required maxlength="4">
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Name on Card</label>
+                <input type="text" class="form-control" placeholder="e.g. John Doe" required>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.2rem; padding: 15px;">
+            <i class="fas fa-lock"></i> Pay Rs. {{ "%.0f"|format(order.total_amount) }} Securely
+        </button>
+    </form>
+    
+    <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">
+        <i class="fas fa-shield-alt"></i> This is a secure 256-bit encrypted simulated payment gateway. No real money will be charged.
+    </p>
+</div>
+{% endblock %}

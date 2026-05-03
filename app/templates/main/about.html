@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width: 800px;">
+    <h1 style="font-size: 3rem; margin-bottom: 20px; color: var(--primary);">About Sohaib Restaurant</h1>
+    
+    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000" alt="Restaurant Interior" style="width: 100%; height: 300px; object-fit: cover; border-radius: var(--radius); margin-bottom: 30px;">
+    
+    <div style="font-size: 1.1rem; line-height: 1.8;">
+        <p style="margin-bottom: 20px;">
+            Founded in 2026, <strong>Sohaib Restaurant</strong> was built on a simple premise: ordering premium quality food should be as enjoyable as eating it. We've combined cutting-edge technology with culinary excellence to bring you a seamless online ordering experience.
+        </p>
+        
+        <h3 style="margin: 30px 0 15px; color: var(--accent);">Our Mission</h3>
+        <p style="margin-bottom: 20px;">
+            To deliver happiness to your doorstep through mouth-watering meals, prepared with the freshest ingredients and delivered with lightning speed.
+        </p>
+
+        <h3 style="margin: 30px 0 15px; color: var(--accent);">Why Choose Us?</h3>
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> <strong>Premium Quality:</strong> We never compromise on ingredients.</li>
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> <strong>Lightning Fast:</strong> Our delivery network ensures your food arrives hot.</li>
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> <strong>Secure Payments:</strong> Multiple safe payment options available.</li>
+            <li style="margin-bottom: 10px;"><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i> <strong>Live Tracking:</strong> Know exactly where your order is.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

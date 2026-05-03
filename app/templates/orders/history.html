@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Order History{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 30px;"><i class="fas fa-history"></i> Order History</h1>
+
+{% if orders %}
+<div class="grid-cards" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+    {% for order in orders %}
+    <div class="card" style="border-top: 4px solid {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% else %}var(--info){% endif %};">
+        <div class="card-body">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+                <div>
+                    <h3 style="margin-bottom: 5px;">Order #{{ order.id }}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">{{ order.created_at.strftime('%b %d, %Y - %I:%M %p') }}</p>
+                </div>
+                <div style="text-align: right;">
+                    <span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(255,255,255,0.1); color: {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% else %}var(--info){% endif %};">
+                        {{ order.status_display }}
+                    </span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px; min-height: 80px;">
+                <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #ddd;">
+                    {% for item in order.items[:3] %}
+                    <li style="margin-bottom: 5px;">{{ item.quantity }}x {{ item.menu_item.name }}</li>
+                    {% endfor %}
+                    {% if order.items|length > 3 %}
+                    <li style="color: var(--text-muted); font-style: italic;">...and {{ order.items|length - 3 }} more item(s)</li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid var(--border);">
+                <span style="font-weight: bold; font-size: 1.1rem; color: var(--accent);">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+                <a href="{{ url_for('orders.track', order_id=order.id) }}" class="btn btn-primary btn-sm">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border);">
+    <i class="fas fa-receipt" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
+    <h2>No orders yet</h2>
+    <p style="color: var(--text-muted); margin-bottom: 30px;">When you place orders, they will appear here.</p>
+    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;">
+        Order Now
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="fas fa-shield-halved"></i> Admin Panel</h3>
+        <div class="admin-nav">
+            <a href="{{ url_for('admin.dashboard') }}" class="admin-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link active"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="{{ url_for('admin.manage_items') }}" class="admin-link"><i class="fas fa-hamburger"></i> Menu Items</a>
+            <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
+        </div>
+    </aside>
+
+    <div class="admin-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="margin: 0;">Order Management</h1>
+            
+            <form method="GET" style="display: flex; gap: 10px;">
+                <select name="status" class="form-control" style="width: 200px; padding: 8px 15px; background: var(--bg-card);" onchange="this.form.submit()">
+                    <option value="">All Orders</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="preparing" {% if status_filter == 'preparing' %}selected{% endif %}>Preparing</option>
+                    <option value="out_for_delivery" {% if status_filter == 'out_for_delivery' %}selected{% endif %}>Out for Delivery</option>
+                    <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </form>
+        </div>
+        
+        <div class="grid-cards" style="grid-template-columns: 1fr; gap: 20px;">
+            {% for order in orders %}
+            <div class="card" style="border-left: 5px solid {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% elif order.status == 'pending' %}var(--warning){% else %}var(--info){% endif %};">
+                <div class="card-body" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 30px;">
+                    
+                    <div style="flex: 1;">
+                        <h3 style="margin-bottom: 5px;">Order #{{ order.id }} <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: normal; margin-left: 10px;">{{ order.created_at.strftime('%b %d, %H:%M') }}</span></h3>
+                        <p style="margin-bottom: 5px;"><strong>Customer:</strong> {{ order.user.username }} ({{ order.phone }})</p>
+                        <p style="margin-bottom: 5px; color: var(--text-muted);"><strong>Address:</strong> {{ order.delivery_address }}</p>
+                        <p style="margin-bottom: 0;"><strong>Total:</strong> Rs. {{ "%.0f"|format(order.total_amount) }} | <strong>Payment:</strong> <span style="text-transform: capitalize;">{{ order.payment_method }}</span></p>
+                    </div>
+                    
+                    <div style="flex: 1; padding: 0 30px; border-left: 1px solid var(--border); border-right: 1px solid var(--border);">
+                        <strong>Items:</strong>
+                        <ul style="list-style: none; padding: 0; margin-top: 5px; font-size: 0.9rem; max-height: 80px; overflow-y: auto;">
+                            {% for item in order.items %}
+                            <li>{{ item.quantity }}x {{ item.menu_item.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div style="flex: 1; text-align: right; padding-left: 30px;">
+                        <form action="{{ url_for('admin.update_order_status', order_id=order.id) }}" method="POST" style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                            <select name="status" class="form-control" style="width: 200px; padding: 8px; background: rgba(0,0,0,0.3);">
+                                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                <option value="preparing" {% if order.status == 'preparing' %}selected{% endif %}>Preparing</option>
+                                <option value="out_for_delivery" {% if order.status == 'out_for_delivery' %}selected{% endif %}>Out for Delivery</option>
+                                <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm" style="width: 200px;">Update Status</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 50px; background: var(--bg-card); border-radius: var(--radius);">
+                <p>No orders found.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
