@@ -25,13 +25,19 @@
             </div>
             <div class="nav-links" id="nav-links">
                 <a href="{{ url_for('main.home') }}" class="nav-link"><i class="bi bi-house-fill"></i> Home</a>
+                {% if not current_user.is_authenticated or not current_user.is_admin %}
                 <a href="{{ url_for('menu.browse') }}" class="nav-link"><i class="bi bi-basket2-fill"></i> Menu</a>
-                {% if current_user.is_authenticated %}
-                <a href="{{ url_for('cart.view_cart') }}" class="nav-link nav-cart"><i class="bi bi-cart-fill"></i> Cart <span class="cart-badge" id="cart-badge">0</span></a>
-                <a href="{{ url_for('orders.history') }}" class="nav-link"><i class="bi bi-receipt"></i> Orders</a>
-                {% if current_user.is_admin %}
-                <a href="{{ url_for('admin.dashboard') }}" class="nav-link nav-admin"><i class="bi bi-shield-lock-fill"></i> Admin</a>
                 {% endif %}
+                
+                {% if current_user.is_authenticated %}
+                    {% if not current_user.is_admin %}
+                    <a href="{{ url_for('cart.view_cart') }}" class="nav-link nav-cart"><i class="bi bi-cart-fill"></i> Cart <span class="cart-badge" id="cart-badge">0</span></a>
+                    <a href="{{ url_for('orders.history') }}" class="nav-link"><i class="bi bi-receipt"></i> Orders</a>
+                    {% endif %}
+                    
+                    {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="nav-link nav-admin"><i class="bi bi-shield-lock-fill"></i> Admin Panel</a>
+                    {% endif %}
                 <div class="nav-user-menu">
                     <button class="nav-user-btn" id="nav-user-btn"><i class="bi bi-person-circle"></i> {{ current_user.username }} <i class="bi bi-chevron-down"></i></button>
                     <div class="nav-dropdown" id="nav-dropdown">
