@@ -8,10 +8,22 @@
         <i class="bi bi-check-lg" style="font-size: 3rem; color: var(--success);"></i>
     </div>
     
+    {% if order.payment_method == 'cash' %}
+    <h1 style="margin-bottom: 15px;">Order Confirmed!</h1>
+    <h3 style="color: var(--text-muted); font-weight: normal; margin-bottom: 30px;">Your order #{{ order.id }} will be paid via Cash on Delivery.</h3>
+    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); text-align: left; margin-bottom: 30px;">
+        <p style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Amount to Pay on Delivery:</span>
+            <span style="font-weight: bold; color: var(--accent);">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+        </p>
+        <p style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Payment Method:</span>
+            <span>Cash on Delivery</span>
+        </p>
+    </div>
+    {% elif order.payment %}
     <h1 style="margin-bottom: 15px;">Payment Successful!</h1>
     <h3 style="color: var(--text-muted); font-weight: normal; margin-bottom: 30px;">Your order #{{ order.id }} has been confirmed.</h3>
-    
-    {% if order.payment %}
     <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); text-align: left; margin-bottom: 30px;">
         <p style="margin-bottom: 10px; display: flex; justify-content: space-between;">
             <span style="color: var(--text-muted);">Transaction ID:</span>

@@ -138,7 +138,7 @@ INSERT INTO menu_items (name, description, price, image_url, category_id, is_ava
 
 -- Beverages
 ('Coca-Cola (500ml)', 'Ice-cold classic Coca-Cola', 180, '/static/images/item_cola.jpg', 6, TRUE),
-('Mango Shake', 'Thick creamy mango milkshake', 400, '/static/images/item_mango.jpg', 6, TRUE),
+('Mango Shake', 'Thick creamy mango milkshake', 400, '/static/images/item_mango.jpg', 6, TRUE),when i add to cart 
 ('Chocolate Shake', 'Rich chocolate milkshake with whipped cream', 450, '/static/images/item_choco.jpg', 6, TRUE),
 ('Mint Lemonade', 'Fresh mint and lemon cooler', 250, '/static/images/item_lemon.jpg', 6, TRUE),
 

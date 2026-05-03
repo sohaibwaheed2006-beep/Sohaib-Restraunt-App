@@ -62,7 +62,13 @@ def checkout():
         CartItem.query.filter_by(user_id=current_user.id).delete()
         db.session.commit()
 
-        # Redirect to payment
+        if payment_method == 'cash':
+            order.status = 'confirmed'
+            db.session.commit()
+            flash('Order placed successfully via Cash on Delivery!', 'success')
+            return redirect(url_for('payment.confirmation', order_id=order.id))
+
+        # Redirect to payment (for card)
         return redirect(url_for('payment.pay', order_id=order.id))
 
     return render_template('orders/checkout.html', cart_items=cart_items,
