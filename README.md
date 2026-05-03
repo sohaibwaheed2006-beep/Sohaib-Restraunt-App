@@ -38,9 +38,7 @@ A modern, full-stack food ordering web application built with Python (Flask) and
    python run.py
    ```
 
-5. **Access:**
-   - Website: [http://localhost:5000](http://localhost:5000)
-   - Admin Login: Username `admin`, Password `admin123`
+
 
 ## Tech Stack
 - **Backend:** Flask, Flask-SQLAlchemy, Flask-Login, PyMySQL
