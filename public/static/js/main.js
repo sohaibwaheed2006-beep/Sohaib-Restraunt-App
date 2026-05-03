@@ -59,8 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         }, 200);
                     }
                     
-                    // Show a toast or something (simplified here)
-                    alert(data.message || 'Added to cart!');
+                    // Create beautiful toast notification
+                    let flashContainer = document.querySelector('.flash-container');
+                    if (!flashContainer) {
+                        flashContainer = document.createElement('div');
+                        flashContainer.className = 'flash-container';
+                        document.body.appendChild(flashContainer);
+                    }
+                    const flashMessage = document.createElement('div');
+                    flashMessage.className = 'flash-message flash-success';
+                    flashMessage.innerHTML = `
+                        <span style="display: flex; align-items: center; gap: 15px;">${data.message || 'Added to cart!'}</span>
+                        <button class="flash-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+                    `;
+                    flashContainer.appendChild(flashMessage);
+                    
+                    // Auto remove after 5 seconds
+                    setTimeout(() => {
+                        if (document.body.contains(flashMessage)) {
+                            flashMessage.remove();
+                        }
+                    }, 5000);
                 }
             } catch (error) {
                 console.error('Error adding to cart:', error);
