@@ -121,9 +121,9 @@ INSERT INTO menu_items (name, description, price, image_url, category_id, is_ava
 ('Spicy Wings (6 pcs)', 'Hot and spicy chicken wings with dipping sauce', 650, '/static/images/item_wings.jpg', 2, TRUE),
 
 -- Pizza
-('Pepperoni Feast', 'Loaded with double pepperoni and mozzarella', 1200, '/static/images/item_pepperoni.jpg', 3, TRUE),
-('Chicken Supreme', 'Grilled chicken, peppers, onions, olives, mushrooms', 1400, '/static/images/item_supreme.jpg', 3, TRUE),
-('Margherita', 'Classic tomato, fresh mozzarella, basil', 900, '/static/images/item_margherita.jpg', 3, TRUE),
+('Pepperoni Feast Pizza', 'Loaded with double pepperoni and mozzarella', 1200, '/static/images/item_pepperoni.jpg', 3, TRUE),
+('Chicken Supreme Pizza', 'Grilled chicken, peppers, onions, olives, mushrooms', 1400, '/static/images/item_supreme.jpg', 3, TRUE),
+('Margherita Pizza', 'Classic tomato, fresh mozzarella, basil', 900, '/static/images/item_margherita.jpg', 3, TRUE),
 
 -- Wraps & Rolls
 ('Chicken Shawarma', 'Marinated chicken, garlic sauce, pickles in pita', 550, '/static/images/item_shawarma.jpg', 4, TRUE),
