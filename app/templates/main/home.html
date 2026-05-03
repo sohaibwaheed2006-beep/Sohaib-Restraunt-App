@@ -119,6 +119,78 @@
     </div>
 </section>
 
+<!-- Exclusive Deals Section -->
+<section style="margin-top: 60px;">
+    <h2 class="section-title"><i class="bi bi-tag-fill" style="color: var(--primary);"></i> Exclusive Deals</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 50px;">
+        
+        <!-- Deal 1 -->
+        <div class="card" style="border: 2px solid var(--primary-light);">
+            <div style="position: relative;">
+                <img src="/static/images/item_10pc.jpg" alt="Family Feast" class="card-img" style="height: 180px;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">SAVE 20%</div>
+            </div>
+            <div class="card-body">
+                <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Family Feast Deal</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">10-Piece Chicken Bucket + 2 Large Fries + 1.5L Drink</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: var(--primary); font-weight: 900; font-size: 1.4rem;">Rs. 2500</span>
+                    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus-fill"></i> Order Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deal 2 -->
+        <div class="card" style="border: 2px solid var(--primary-light);">
+            <div style="position: relative;">
+                <img src="/static/images/item_smash.jpg" alt="Burger Duo" class="card-img" style="height: 180px;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">HOT DEAL</div>
+            </div>
+            <div class="card-body">
+                <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Burger Duo</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">2 Classic Smash Burgers + 2 Drinks + Regular Fries</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: var(--primary); font-weight: 900; font-size: 1.4rem;">Rs. 1850</span>
+                    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus-fill"></i> Order Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deal 3 -->
+        <div class="card" style="border: 2px solid var(--primary-light);">
+            <div style="position: relative;">
+                <img src="/static/images/item_pizza.jpg" alt="Pizza Party" class="card-img" onerror="this.src='/static/images/cat_pizza.jpg'" style="height: 180px;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">POPULAR</div>
+            </div>
+            <div class="card-body">
+                <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Pizza Party</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">1 Large Supreme Pizza + 6 Spicy Wings + 1L Cola</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: var(--primary); font-weight: 900; font-size: 1.4rem;">Rs. 2200</span>
+                    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus-fill"></i> Order Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deal 4 -->
+        <div class="card" style="border: 2px solid var(--primary-light);">
+            <div style="position: relative;">
+                <img src="/static/images/item_wrap.jpg" alt="Snack Pack" class="card-img" style="height: 180px;">
+                <div style="position: absolute; top: 10px; right: 10px; background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">LUNCH DEAL</div>
+            </div>
+            <div class="card-body">
+                <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Wrap Snack Pack</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">2 Chicken Wraps + Onion Rings + 2 Lemonades</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: var(--primary); font-weight: 900; font-size: 1.4rem;">Rs. 1500</span>
+                    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart-plus-fill"></i> Order Now</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 <!-- Popular Items -->
 <section style="margin-top: 60px;">
     <h2 class="section-title"><i class="bi bi-fire-flame-curved" style="color: var(--primary);"></i> Popular Now</h2>
