@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+# Force Vercel rebuild to pull the newly updated DATABASE_URL from environment variables
 load_dotenv()
 
 
