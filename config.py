@@ -8,8 +8,14 @@ class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY', 'feastflow-secret-key-change-in-production')
     db_url = os.environ.get('DATABASE_URL')
-    if db_url and db_url.startswith('mysql://'):
-        db_url = db_url.replace('mysql://', 'mysql+pymysql://', 1)
+    if db_url:
+        # Strip ssl-mode parameters that cause PyMySQL connection crashes
+        for param in ['?ssl-mode=', '?ssl_mode=', '?sslmode=', '&ssl-mode=', '&ssl_mode=', '&sslmode=']:
+            if param in db_url:
+                db_url = db_url.split(param)[0]
+                
+        if db_url.startswith('mysql://'):
+            db_url = db_url.replace('mysql://', 'mysql+pymysql://', 1)
         
     SQLALCHEMY_DATABASE_URI = db_url or 'mysql+pymysql://root:sohaib2006@localhost/feastflow'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
