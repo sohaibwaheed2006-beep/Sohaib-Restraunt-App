@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS cart_items (
     user_id INT NOT NULL,
     item_id INT NOT NULL,
     quantity INT DEFAULT 1,
+    options VARCHAR(500) DEFAULT NULL,
+    options_total FLOAT DEFAULT 0.0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES menu_items(id) ON DELETE CASCADE
 );
@@ -70,6 +72,8 @@ CREATE TABLE IF NOT EXISTS order_items (
     item_id INT NOT NULL,
     quantity INT NOT NULL,
     price FLOAT NOT NULL,
+    options VARCHAR(500) DEFAULT NULL,
+    options_total FLOAT DEFAULT 0.0,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES menu_items(id) ON DELETE CASCADE
 );
@@ -138,7 +142,7 @@ INSERT INTO menu_items (name, description, price, image_url, category_id, is_ava
 
 -- Beverages
 ('Coca-Cola (500ml)', 'Ice-cold classic Coca-Cola', 180, '/static/images/item_cola.jpg', 6, TRUE),
-('Mango Shake', 'Thick creamy mango milkshake', 400, '/static/images/item_mango.jpg', 6, TRUE),when i add to cart 
+('Mango Shake', 'Thick creamy mango milkshake', 400, '/static/images/item_mango.jpg', 6, TRUE),
 ('Chocolate Shake', 'Rich chocolate milkshake with whipped cream', 450, '/static/images/item_choco.jpg', 6, TRUE),
 ('Mint Lemonade', 'Fresh mint and lemon cooler', 250, '/static/images/item_lemon.jpg', 6, TRUE),
 
