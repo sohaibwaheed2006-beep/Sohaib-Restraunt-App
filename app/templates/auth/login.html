@@ -1,35 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Login - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <h2 style="text-align: center; margin-bottom: 20px; font-size: 2rem;">Welcome Back!</h2>
-    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Sign in to continue to Sohaib Restaurant</p>
+<div class="flex items-center justify-center min-h-[60vh] py-10 select-none relative">
     
-    <form method="POST" action="{{ url_for('auth.login') }}">
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" class="form-control" required placeholder="you@example.com">
+    <!-- Neon orange background glow -->
+    <div class="absolute w-80 h-80 bg-brand-orange/10 rounded-full filter blur-[80px] -z-10 animate-pulse"></div>
+
+    <div class="form-container max-w-[450px]">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-display font-black text-white mb-2">Welcome Back!</h2>
+            <p class="text-xs text-neutral-400">Sign in to continue to Sohaib Restaurant</p>
         </div>
         
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password">
-        </div>
+        <form method="POST" action="{{ url_for('auth.login') }}" class="flex flex-col gap-5">
+            <div class="form-group">
+                <label for="email" class="flex items-center gap-2"><i class="bi bi-envelope-fill text-brand-orange"></i> Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="flex items-center gap-2"><i class="bi bi-lock-fill text-brand-orange"></i> Password</label>
+                <input type="password" id="password" name="password" class="form-control" required placeholder="••••••••">
+            </div>
+            
+            <div class="flex items-center gap-2 mb-2">
+                <input type="checkbox" id="remember" name="remember" class="w-4 h-4 accent-brand-orange cursor-pointer">
+                <label for="remember" class="text-xs font-semibold text-neutral-300 cursor-pointer select-none">Remember me</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-full py-3.5 shadow-orange-glow text-base">
+                <i class="bi bi-box-arrow-in-right text-lg"></i> Sign In
+            </button>
+        </form>
         
-        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-            <input type="checkbox" id="remember" name="remember" style="width: 16px; height: 16px; accent-color: var(--primary);">
-            <label for="remember" style="margin-bottom: 0;">Remember me</label>
+        <div class="text-center mt-8 pt-6 border-t border-white/5 text-xs text-neutral-400">
+            <p>Don't have an account yet? <a href="{{ url_for('auth.register') }}" class="text-brand-orange hover:underline font-bold">Create one here</a></p>
         </div>
-        
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-            <i class="bi bi-box-arrow-in-right"></i> Login
-        </button>
-    </form>
-    
-    <div style="text-align: center; margin-top: 25px; color: var(--text-muted);">
-        <p>Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: var(--primary); font-weight: bold;">Sign up here</a></p>
     </div>
 </div>
 {% endblock %}

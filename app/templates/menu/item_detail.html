@@ -1,86 +1,148 @@
 {% extends "base.html" %}
 
-{% block title %}{{ item.name }} - Menu{% endblock %}
+{% block title %}{{ item.name }} - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{{ url_for('menu.browse', category=item.category_id) }}" style="color: var(--text-muted);"><i class="bi bi-arrow-left"></i> Back to {{ item.category.name }}</a>
+<!-- Back Navigation -->
+<div class="mb-6 select-none">
+    <a href="{{ url_for('menu.browse', category=item.category_id) }}" class="text-sm text-neutral-400 hover:text-brand-orange flex items-center gap-2 transition-all">
+        <i class="bi bi-arrow-left"></i> Back to {{ item.category.name }}
+    </a>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: var(--bg-card); padding: 30px; border-radius: var(--radius); border: 1px solid var(--border);">
-    <div>
-        <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width: 100%; border-radius: var(--radius); box-shadow: var(--shadow);" onerror="this.src='/static/images/default_food.jpg'">
+<!-- Main Showcase Container -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-brand-charcoal/50 border border-white/5 p-6 md:p-10 rounded-[32px] shadow-glass backdrop-blur-md items-start">
+    
+    <!-- Left Column: Media Presentation -->
+    <div class="w-full relative group">
+        <!-- Orange Glow backdrop -->
+        <div class="absolute inset-0 bg-brand-orange/10 rounded-3xl filter blur-3xl opacity-50 group-hover:opacity-85 transition-all duration-500"></div>
+        
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 shadow-glass aspect-[4/3] w-full">
+            <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" onerror="this.src='/static/images/default_food.jpg'">
+        </div>
     </div>
     
-    <div style="display: flex; flex-direction: column;">
-        <span style="background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; align-self: flex-start; margin-bottom: 15px;">{{ item.category.name }}</span>
+    <!-- Right Column: Interactive Console -->
+    <div class="flex flex-col h-full gap-6 select-none">
         
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">{{ item.name }}</h1>
-        <h2 id="main-price" style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;" data-base-price="{{ item.price }}">Rs. {{ "%.0f"|format(item.price) }}</h2>
+        <div class="flex flex-col gap-2">
+            <span class="bg-brand-orange/15 border border-brand-orange/30 text-brand-orange text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full w-max">
+                {{ item.category.name }}
+            </span>
+            <h1 class="text-3xl sm:text-4xl font-display font-black text-white leading-tight mt-1">{{ item.name }}</h1>
+            <h2 id="main-price" class="text-3xl font-display font-black text-brand-orange" data-base-price="{{ item.price }}">Rs. {{ "%.0f"|format(item.price) }}</h2>
+        </div>
         
-        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;">
+        <p class="text-sm text-neutral-400 leading-relaxed border-t border-white/5 pt-4">
             {{ item.description }}
         </p>
         
-        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
+        <!-- Customization Console Form -->
+        <div class="border-t border-white/5 pt-6 mt-2">
             {% if current_user.is_authenticated %}
-            <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form">
+            <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form flex flex-col gap-6">
                 
+                <!-- Pizza Customizer: Sizes -->
                 {% if item.category.name == 'Pizza' or item.category_id == 3 %}
-                <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
-                    <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Select Size</h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Small|0" onchange="updatePrice()" required> Small (Rs. {{ "%.0f"|format(item.price) }})</label>
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Medium|200" onchange="updatePrice()" required checked> Medium (Rs. {{ "%.0f"|format(item.price + 200) }})</label>
-                        <label style="cursor: pointer;"><input type="radio" name="size" value="Large|400" onchange="updatePrice()" required> Large (Rs. {{ "%.0f"|format(item.price + 400) }})</label>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                    <h4 class="text-sm font-bold text-white mb-3 uppercase tracking-wider flex items-center gap-2"><i class="bi bi-arrows-angle-expand text-brand-orange"></i> Select Size</h4>
+                    <div class="flex flex-col gap-2.5">
+                        <label class="flex items-center justify-between p-3.5 bg-neutral-900 border border-white/5 rounded-xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all group has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="size" value="Small|0" onchange="updatePrice()" class="w-4 h-4 accent-brand-orange cursor-pointer" required>
+                                <span class="text-sm font-semibold text-white">Small</span>
+                            </div>
+                            <span class="text-sm font-bold text-neutral-400 group-has-[:checked]:text-brand-orange">Rs. {{ "%.0f"|format(item.price) }}</span>
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-3.5 bg-neutral-900 border border-white/5 rounded-xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all group has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="size" value="Medium|200" onchange="updatePrice()" class="w-4 h-4 accent-brand-orange cursor-pointer" required checked>
+                                <span class="text-sm font-semibold text-white">Medium</span>
+                            </div>
+                            <span class="text-sm font-bold text-neutral-400 group-has-[:checked]:text-brand-orange">Rs. {{ "%.0f"|format(item.price + 200) }}</span>
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-3.5 bg-neutral-900 border border-white/5 rounded-xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all group has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="size" value="Large|400" onchange="updatePrice()" class="w-4 h-4 accent-brand-orange cursor-pointer" required>
+                                <span class="text-sm font-semibold text-white">Large</span>
+                            </div>
+                            <span class="text-sm font-bold text-neutral-400 group-has-[:checked]:text-brand-orange">Rs. {{ "%.0f"|format(item.price + 400) }}</span>
+                        </label>
                     </div>
                 </div>
+                
+                <!-- Burger Customizer: Addons -->
                 {% elif item.category.name == 'Burgers' or item.category_id == 1 %}
-                <div style="margin-bottom: 20px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
-                    <h4 style="margin-bottom: 10px; font-size: 1.1rem;">Add-ons</h4>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Cheese|100" onchange="updatePrice()"> Extra Cheese (+ Rs. 100)</label>
-                        <label style="cursor: pointer;"><input type="checkbox" name="addon" value="Extra Patty|300" onchange="updatePrice()"> Extra Patty (+ Rs. 300)</label>
+                <div class="bg-white/5 border border-white/5 p-5 rounded-2xl">
+                    <h4 class="text-sm font-bold text-white mb-3 uppercase tracking-wider flex items-center gap-2"><i class="bi bi-plus-circle text-brand-orange"></i> Add-ons</h4>
+                    <div class="flex flex-col gap-2.5">
+                        <label class="flex items-center justify-between p-3.5 bg-neutral-900 border border-white/5 rounded-xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all group has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" name="addon" value="Extra Cheese|100" onchange="updatePrice()" class="w-4 h-4 accent-brand-orange cursor-pointer">
+                                <span class="text-sm font-semibold text-white">Extra Cheese</span>
+                            </div>
+                            <span class="text-sm font-bold text-neutral-400 group-has-[:checked]:text-brand-orange">+ Rs. 100</span>
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-3.5 bg-neutral-900 border border-white/5 rounded-xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all group has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" name="addon" value="Extra Patty|300" onchange="updatePrice()" class="w-4 h-4 accent-brand-orange cursor-pointer">
+                                <span class="text-sm font-semibold text-white">Extra Patty</span>
+                            </div>
+                            <span class="text-sm font-bold text-neutral-400 group-has-[:checked]:text-brand-orange">+ Rs. 300</span>
+                        </label>
                     </div>
                 </div>
                 {% endif %}
                 
-                <div style="display: flex; gap: 20px; align-items: center;">
-                <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.2);">
-                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=Math.max(1, parseInt(q.value)-1);" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="fas fa-minus"></i></button>
-                    <input type="number" id="quantity" name="quantity" value="1" min="1" style="background: none; border: none; color: white; width: 50px; text-align: center; font-size: 1.2rem; font-weight: bold; outline: none;">
-                    <button type="button" onclick="const q=document.getElementById('quantity'); q.value=parseInt(q.value)+1;" style="background: none; border: none; color: white; padding: 15px; cursor: pointer;"><i class="bi bi-plus-lg"></i></button>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 15px; font-size: 1.1rem;">
-                    <i class="bi bi-cart-plus-fill"></i> Add to Cart
-                </button>
+                <!-- Quantity & Submit Order action row -->
+                <div class="flex flex-col sm:flex-row gap-4 items-center mt-2">
+                    <!-- Quantity Selector widget -->
+                    <div class="flex items-center border border-white/10 rounded-full overflow-hidden bg-brand-charcoal px-3 py-1 shadow-inner-glass">
+                        <button type="button" onclick="const q=document.getElementById('quantity'); q.value=Math.max(1, parseInt(q.value)-1);" class="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white transition-all focus:outline-none"><i class="bi bi-dash-lg"></i></button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" readonly class="bg-transparent text-white w-12 text-center font-bold text-lg focus:outline-none select-none">
+                        <button type="button" onclick="const q=document.getElementById('quantity'); q.value=parseInt(q.value)+1;" class="w-10 h-10 flex items-center justify-center text-neutral-400 hover:text-white transition-all focus:outline-none"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary flex-1 py-3.5 text-base w-full shadow-orange-glow">
+                        <i class="bi bi-cart-plus-fill text-lg"></i> Add to Cart
+                    </button>
                 </div>
             </form>
             {% else %}
-            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
-                <i class="bi bi-box-arrow-in-right"></i> Login to Order
-            </a>
+            <div class="flex flex-col gap-4 mt-2">
+                <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-primary py-3.5 text-base shadow-orange-glow w-full">
+                    <i class="bi bi-box-arrow-in-right"></i> Login to Order
+                </a>
+            </div>
             {% endif %}
         </div>
     </div>
 </div>
 
+<!-- Related items section -->
 {% if related_items %}
-<div style="margin-top: 60px;">
-    <h2 class="section-title">You might also like</h2>
-    <div class="grid-cards">
+<div class="mt-16 select-none">
+    <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+        <h2 class="text-2xl font-display font-black text-white flex items-center gap-3">
+            <i class="bi bi-fire-flame-curved text-brand-orange"></i> You Might Also Like
+        </h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {% for rel_item in related_items %}
-        <div class="card">
-            <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}">
-                <img src="{{ rel_item.image_url }}" alt="{{ rel_item.name }}" class="card-img" onerror="this.src='/static/images/default_food.jpg'">
+        <div class="card flex flex-col">
+            <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}" class="block relative overflow-hidden aspect-[4/3] rounded-t-3xl">
+                <img src="{{ rel_item.image_url }}" alt="{{ rel_item.name }}" class="w-full h-full object-cover hover:scale-105 transition-all duration-500" onerror="this.src='/static/images/default_food.jpg'">
             </a>
-            <div class="card-body">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                    <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}">
-                        <h3 style="font-size: 1.1rem;">{{ rel_item.name }}</h3>
+            <div class="p-6 flex flex-col flex-1 gap-2">
+                <div class="flex justify-between items-start gap-2">
+                    <a href="{{ url_for('menu.item_detail', item_id=rel_item.id) }}" class="hover:text-brand-orange transition-all">
+                        <h3 class="text-sm font-bold text-white line-clamp-1 leading-snug">{{ rel_item.name }}</h3>
                     </a>
-                    <span style="color: var(--accent); font-weight: bold;">Rs. {{ "%.0f"|format(rel_item.price) }}</span>
+                    <span class="text-sm font-display font-black text-brand-orange">Rs. {{ "%.0f"|format(rel_item.price) }}</span>
                 </div>
             </div>
         </div>
@@ -89,18 +151,13 @@
 </div>
 {% endif %}
 
-<style>
-@media (max-width: 768px) {
-    div[style*="grid-template-columns: 1fr 1fr"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
-</style>
-
+<!-- Client-side Price custom calculation script -->
 <script>
 function updatePrice() {
-    const basePrice = parseFloat(document.getElementById('main-price').getAttribute('data-base-price'));
+    const mainPriceElem = document.getElementById('main-price');
+    if (!mainPriceElem) return;
+    
+    const basePrice = parseFloat(mainPriceElem.getAttribute('data-base-price'));
     let additionalPrice = 0;
     
     const sizeRadio = document.querySelector('input[name="size"]:checked');
@@ -113,10 +170,9 @@ function updatePrice() {
         additionalPrice += parseFloat(addon.value.split('|')[1]);
     });
     
-    document.getElementById('main-price').innerText = 'Rs. ' + (basePrice + additionalPrice);
+    mainPriceElem.innerText = 'Rs. ' + (basePrice + additionalPrice);
 }
 
 document.addEventListener("DOMContentLoaded", updatePrice);
 </script>
-
 {% endblock %}

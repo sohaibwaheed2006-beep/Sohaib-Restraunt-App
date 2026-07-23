@@ -8,6 +8,17 @@ load_dotenv()
 class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY', 'feastflow-secret-key-change-in-production')
+    def _is_mysql_local_available():
+        import socket
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(0.5)
+            s.connect(('localhost', 3306))
+            s.close()
+            return True
+        except Exception:
+            return False
+
     db_url = os.environ.get('DATABASE_URL')
     if db_url:
         # Strip ssl-mode parameters that cause PyMySQL connection crashes
@@ -17,8 +28,13 @@ class Config:
                 
         if db_url.startswith('mysql://'):
             db_url = db_url.replace('mysql://', 'mysql+pymysql://', 1)
+        SQLALCHEMY_DATABASE_URI = db_url
+    elif _is_mysql_local_available():
+        SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:sohaib2006@localhost/feastflow'
+    else:
+        base_dir = os.path.abspath(os.path.dirname(__file__))
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'feastflow.db')
         
-    SQLALCHEMY_DATABASE_URI = db_url or 'mysql+pymysql://root:sohaib2006@localhost/feastflow'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
 

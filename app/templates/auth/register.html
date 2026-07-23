@@ -1,54 +1,62 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<div class="form-container" style="max-width: 600px;">
-    <h2 style="text-align: center; margin-bottom: 20px; font-size: 2rem;">Join Sohaib Restaurant</h2>
-    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Create an account to start ordering delicious food!</p>
+<div class="flex items-center justify-center min-h-[70vh] py-10 select-none relative">
     
-    <form method="POST" action="{{ url_for('auth.register') }}">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" required value="{{ username|default('') }}">
+    <!-- Neon orange background glow -->
+    <div class="absolute w-96 h-96 bg-brand-orange/10 rounded-full filter blur-[100px] -z-10 animate-pulse"></div>
+
+    <div class="form-container max-w-[650px]">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-display font-black text-white mb-2">Join Sohaib Restaurant</h2>
+            <p class="text-xs text-neutral-400">Create an account to start ordering delicious hot food!</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('auth.register') }}" class="flex flex-col gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="form-group">
+                    <label for="username" class="flex items-center gap-2"><i class="bi bi-person-fill text-brand-orange"></i> Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required value="{{ username|default('') }}" placeholder="SohaibWaheed">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="flex items-center gap-2"><i class="bi bi-telephone-fill text-brand-orange"></i> Phone Number</label>
+                    <input type="text" id="phone" name="phone" class="form-control" required value="{{ phone|default('') }}" placeholder="e.g. 03001234567">
+                </div>
             </div>
             
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="text" id="phone" name="phone" class="form-control" required value="{{ phone|default('') }}" placeholder="e.g. 03001234567">
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" class="form-control" required value="{{ email|default('') }}">
-        </div>
-        
-        <div class="form-group">
-            <label for="address">Delivery Address (Optional, can add later)</label>
-            <textarea id="address" name="address" class="form-control" rows="3">{{ address|default('') }}</textarea>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-control" required minlength="6">
+                <label for="email" class="flex items-center gap-2"><i class="bi bi-envelope-fill text-brand-orange"></i> Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required value="{{ email|default('') }}" placeholder="you@example.com">
             </div>
             
             <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" class="form-control" required minlength="6">
+                <label for="address" class="flex items-center gap-2"><i class="bi bi-geo-alt-fill text-brand-orange"></i> Delivery Address <span class="text-[10px] text-neutral-500 font-semibold">(Optional)</span></label>
+                <textarea id="address" name="address" class="form-control" rows="2" placeholder="Enter your full street address...">{{ address|default('') }}</textarea>
             </div>
-        </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="form-group">
+                    <label for="password" class="flex items-center gap-2"><i class="bi bi-lock-fill text-brand-orange"></i> Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required minlength="6" placeholder="At least 6 characters">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password" class="flex items-center gap-2"><i class="bi bi-shield-lock-fill text-brand-orange"></i> Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required minlength="6" placeholder="Confirm your password">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-full py-3.5 shadow-orange-glow text-base mt-2">
+                <i class="bi bi-person-fill-plus text-lg"></i> Create Account
+            </button>
+        </form>
         
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
-            <i class="bi bi-person-fill-plus"></i> Create Account
-        </button>
-    </form>
-    
-    <div style="text-align: center; margin-top: 25px; color: var(--text-muted);">
-        <p>Already have an account? <a href="{{ url_for('auth.login') }}" style="color: var(--primary); font-weight: bold;">Log in here</a></p>
+        <div class="text-center mt-8 pt-6 border-t border-white/5 text-xs text-neutral-400">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}" class="text-brand-orange hover:underline font-bold">Log in here</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}
