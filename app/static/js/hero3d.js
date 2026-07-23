@@ -95,15 +95,13 @@ class Food3D {
         heroImgEl.alt = type;
         heroImgEl.className = `hero-food-img hero-food-img-${type}`;
         heroImgEl.style.cssText = `
-            width: ${type === 'pizza' ? '310px' : '290px'};
-            height: ${type === 'pizza' ? '310px' : '270px'};
+            width: ${type === 'pizza' ? '320px' : '300px'};
+            height: ${type === 'pizza' ? '320px' : '280px'};
             object-fit: contain;
-            filter: drop-shadow(0 24px 48px rgba(255,107,53,0.25)) drop-shadow(0 8px 16px rgba(0,0,0,0.7));
-            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 40px rgba(255,107,53,0.4)) drop-shadow(0 20px 30px rgba(0,0,0,0.8));
             transition: opacity 0.5s ease, transform 0.5s ease;
             position: absolute;
             z-index: 10;
-            background: transparent;
         `;
         wrap.appendChild(heroImgEl);
 
