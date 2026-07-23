@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+.admin-link { transition: all 0.2s; }
+.admin-link.active, .admin-link:hover { background: rgba(255, 95, 31, 0.1); color: var(--brand-orange, #ff5f1f); border-left-color: var(--brand-orange, #ff5f1f); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-8 items-start">
+
+    <!-- Admin Sidebar -->
+    <aside class="w-full lg:w-56 flex-shrink-0 sticky top-24">
+        <div class="card p-5 flex flex-col gap-1">
+            <p class="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-3 px-3">Admin Panel</p>
+            <a href="{{ url_for('admin.dashboard') }}"
+               class="admin-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold border-l-2 border-transparent
+               {% if request.endpoint == 'admin.dashboard' %}active{% else %}text-neutral-400{% endif %}">
+                <i class="bi bi-speedometer2 w-4"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.manage_orders') }}"
+               class="admin-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold border-l-2 border-transparent
+               {% if request.endpoint == 'admin.manage_orders' %}active{% else %}text-neutral-400{% endif %}">
+                <i class="bi bi-receipt w-4"></i> Orders
+            </a>
+            <a href="{{ url_for('admin.manage_items') }}"
+               class="admin-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold border-l-2 border-transparent
+               {% if request.endpoint in ['admin.manage_items', 'admin.add_item', 'admin.edit_item'] %}active{% else %}text-neutral-400{% endif %}">
+                <i class="bi bi-egg-fried w-4"></i> Menu Items
+            </a>
+            <a href="{{ url_for('admin.manage_categories') }}"
+               class="admin-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold border-l-2 border-transparent
+               {% if request.endpoint == 'admin.manage_categories' %}active{% else %}text-neutral-400{% endif %}">
+                <i class="bi bi-tags-fill w-4"></i> Categories
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 min-w-0">
+        {% block admin_content %}{% endblock %}
+    </div>
+
+</div>
+{% endblock %}

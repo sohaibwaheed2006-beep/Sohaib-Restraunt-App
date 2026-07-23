@@ -1,90 +1,99 @@
 {% extends "base.html" %}
-
-{% block title %}Checkout{% endblock %}
+{% block title %}Checkout - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<h1 style="margin-bottom: 30px;"><i class="fas fa-lock"></i> Secure Checkout</h1>
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-black text-white flex items-center gap-3">
+        <i class="bi bi-lock-fill text-brand-orange"></i> Secure Checkout
+    </h1>
+</div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
     <!-- Checkout Form -->
-    <div class="form-container" style="margin: 0; max-width: 100%;">
-        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Delivery Details</h3>
-        
-        <form method="POST" action="{{ url_for('orders.checkout') }}" id="checkout-form">
+    <div class="lg:col-span-2 form-container">
+        <h3 class="text-lg font-display font-black text-white border-b border-white/5 pb-4 mb-6 flex items-center gap-2">
+            <i class="bi bi-geo-alt-fill text-brand-orange"></i> Delivery Details
+        </h3>
+
+        <form method="POST" action="{{ url_for('orders.checkout') }}" id="checkout-form" class="flex flex-col gap-5">
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="text" id="phone" name="phone" class="form-control" required value="{{ phone|default(current_user.phone or '') }}" placeholder="e.g. 03001234567">
+                <label for="phone" class="flex items-center gap-2"><i class="bi bi-telephone-fill text-brand-orange"></i> Phone Number</label>
+                <input type="text" id="phone" name="phone" class="form-control" required
+                       value="{{ phone|default(current_user.phone or '') }}" placeholder="e.g. 03001234567">
             </div>
-            
+
             <div class="form-group">
-                <label for="delivery_address">Delivery Address</label>
-                <textarea id="delivery_address" name="delivery_address" class="form-control" rows="4" required placeholder="Complete address for delivery">{{ delivery_address|default(current_user.address or '') }}</textarea>
+                <label for="delivery_address" class="flex items-center gap-2"><i class="bi bi-house-fill text-brand-orange"></i> Delivery Address</label>
+                <textarea id="delivery_address" name="delivery_address" class="form-control" rows="3" required
+                          placeholder="Complete street address for delivery">{{ delivery_address|default(current_user.address or '') }}</textarea>
             </div>
-            
-            <h3 style="margin: 30px 0 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Payment Method</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
-                <label style="border: 1px solid var(--primary); border-radius: 8px; padding: 15px; cursor: pointer; display: flex; align-items: center; gap: 10px; background: rgba(200, 16, 46, 0.1);">
-                    <input type="radio" name="payment_method" value="cash" checked style="accent-color: var(--primary);">
-                    <span><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
-                </label>
-                
-                <label style="border: 1px solid var(--border); border-radius: 8px; padding: 15px; cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                    <input type="radio" name="payment_method" value="card" style="accent-color: var(--primary);">
-                    <span><i class="fas fa-credit-card"></i> Credit/Debit Card</span>
-                </label>
+
+            <div class="mt-2">
+                <h3 class="text-lg font-display font-black text-white border-b border-white/5 pb-4 mb-5 flex items-center gap-2">
+                    <i class="bi bi-credit-card-fill text-brand-orange"></i> Payment Method
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="flex items-center gap-4 p-4 bg-neutral-900 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5 group">
+                        <input type="radio" name="payment_method" value="cash" checked class="w-4 h-4 accent-brand-orange cursor-pointer">
+                        <div>
+                            <p class="font-bold text-white text-sm flex items-center gap-2"><i class="bi bi-cash-stack text-brand-gold"></i> Cash on Delivery</p>
+                            <p class="text-xs text-neutral-400 mt-0.5">Pay when your order arrives</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center gap-4 p-4 bg-neutral-900 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/5 hover:border-white/10 transition-all has-[:checked]:border-brand-orange has-[:checked]:bg-brand-orange/5 group">
+                        <input type="radio" name="payment_method" value="card" class="w-4 h-4 accent-brand-orange cursor-pointer">
+                        <div>
+                            <p class="font-bold text-white text-sm flex items-center gap-2"><i class="bi bi-credit-card text-brand-orange"></i> Credit / Debit Card</p>
+                            <p class="text-xs text-neutral-400 mt-0.5">Secure online payment</p>
+                        </div>
+                    </label>
+                </div>
             </div>
-            
-            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.2rem; padding: 15px;">
-                Place Order <i class="bi bi-check-lg"></i>
+
+            <button type="submit" class="btn btn-primary py-4 text-base shadow-orange-glow mt-4">
+                <i class="bi bi-bag-check-fill text-lg"></i> Place Order
             </button>
         </form>
     </div>
 
     <!-- Order Summary -->
-    <div>
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; position: sticky; top: 90px;">
-            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Your Order</h3>
-            
-            <div style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; padding-right: 10px;">
+    <div class="sticky top-24">
+        <div class="card p-6 flex flex-col gap-4">
+            <h3 class="text-lg font-display font-black text-white border-b border-white/5 pb-4">Your Order</h3>
+
+            <div class="flex flex-col gap-3 max-h-64 overflow-y-auto pr-1">
                 {% for item in cart_items %}
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.95rem;">
-                    <div>
-                        <span style="font-weight: bold;">{{ item.quantity }}x</span> {{ item.menu_item.name }}
+                <div class="flex justify-between items-start text-sm gap-3">
+                    <div class="flex-1 min-w-0">
+                        <span class="text-brand-orange font-bold">{{ item.quantity }}x</span>
+                        <span class="text-neutral-200 ml-1">{{ item.menu_item.name }}</span>
                         {% if item.options %}
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-left: 20px;">
-                            {{ item.options }}
-                        </div>
+                        <div class="text-xs text-neutral-500 mt-0.5 pl-5">{{ item.options }}</div>
                         {% endif %}
                     </div>
-                    <span>Rs. {{ "%.0f"|format((item.menu_item.price + (item.options_total or 0)) * item.quantity) }}</span>
+                    <span class="text-neutral-300 font-semibold flex-shrink-0">
+                        Rs. {{ "%.0f"|format((item.menu_item.price + (item.options_total or 0)) * item.quantity) }}
+                    </span>
                 </div>
                 {% endfor %}
             </div>
-            
-            <div style="border-top: 1px solid var(--border); padding-top: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-muted);">
+
+            <div class="border-t border-white/5 pt-4 flex flex-col gap-2.5 text-sm">
+                <div class="flex justify-between text-neutral-400">
                     <span>Subtotal</span>
-                    <span>Rs. {{ "%.0f"|format(total) }}</span>
+                    <span class="text-white font-semibold">Rs. {{ "%.0f"|format(total) }}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--text-muted);">
+                <div class="flex justify-between text-neutral-400">
                     <span>Delivery Fee</span>
-                    <span>Rs. 100</span>
+                    <span class="text-white font-semibold">Rs. 100</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 1.2rem; font-weight: bold; color: var(--accent);">
-                    <span>Total to Pay</span>
-                    <span>Rs. {{ "%.0f"|format(total + 100) }}</span>
+                <div class="flex justify-between border-t border-white/5 pt-3 mt-1">
+                    <span class="font-display font-bold text-white">Total to Pay</span>
+                    <span class="font-display font-black text-brand-orange text-lg">Rs. {{ "%.0f"|format(total + 100) }}</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-@media (max-width: 900px) {
-    div[style*="grid-template-columns: 2fr 1fr"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
 {% endblock %}

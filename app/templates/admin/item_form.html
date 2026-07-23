@@ -1,69 +1,70 @@
-{% extends "admin/dashboard.html" %}
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ action }} Menu Item - Admin{% endblock %}
 
-{% block title %}{{ action }} Item{% endblock %}
+{% block admin_content %}
+<div class="flex items-center gap-4 mb-6">
+    <a href="{{ url_for('admin.manage_items') }}" class="text-sm text-neutral-400 hover:text-brand-orange transition-all flex items-center gap-1.5">
+        <i class="bi bi-arrow-left"></i> Back to Items
+    </a>
+    <h1 class="text-2xl font-display font-black text-white">{{ action }} Menu Item</h1>
+</div>
 
-{% block content %}
-<div class="admin-layout">
-    <aside class="admin-sidebar">
-        <!-- sidebar omitted for brevity, matches others -->
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="bi bi-shield-lock-fill"></i> Admin Panel</h3>
-        <div class="admin-nav">
-            <a href="{{ url_for('admin.dashboard') }}" class="admin-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="bi bi-receipt"></i> Orders</a>
-            <a href="{{ url_for('admin.manage_items') }}" class="admin-link active"><i class="fas fa-hamburger"></i> Menu Items</a>
-            <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
+<div class="form-container max-w-2xl">
+    <form method="POST" class="flex flex-col gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="form-group">
+                <label>Item Name</label>
+                <input type="text" name="name" class="form-control" required
+                       placeholder="e.g. Smash Burger" value="{{ item.name if item else '' }}">
+            </div>
+            <div class="form-group">
+                <label>Price (Rs.)</label>
+                <input type="number" name="price" step="0.01" min="0" class="form-control" required
+                       placeholder="e.g. 550" value="{{ item.price if item else '' }}">
+            </div>
         </div>
-    </aside>
 
-    <div class="admin-content">
-        <h1 style="margin-bottom: 30px;">{{ action }} Menu Item</h1>
-        
-        <div class="form-container" style="max-width: 100%; margin: 0;">
-            <form method="POST">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>Item Name</label>
-                        <input type="text" name="name" class="form-control" required value="{{ item.name if item else '' }}">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Price (Rs.)</label>
-                        <input type="number" name="price" step="0.01" class="form-control" required value="{{ item.price if item else '' }}">
-                    </div>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select name="category_id" class="form-control" required style="background-color: var(--secondary-light);">
-                            {% for cat in categories %}
-                            <option value="{{ cat.id }}" {% if item and item.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Image URL (e.g. /static/images/burger.jpg)</label>
-                        <input type="text" name="image_url" class="form-control" value="{{ item.image_url if item else '' }}">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description" class="form-control" rows="4">{{ item.description if item else '' }}</textarea>
-                </div>
-                
-                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-                    <input type="checkbox" name="is_available" id="is_available" {% if not item or item.is_available %}checked{% endif %} style="width: 20px; height: 20px; accent-color: var(--primary);">
-                    <label for="is_available" style="margin: 0; font-weight: bold; cursor: pointer;">Item is currently available for ordering</label>
-                </div>
-                
-                <div style="margin-top: 30px; display: flex; gap: 15px;">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Item</button>
-                    <a href="{{ url_for('admin.manage_items') }}" class="btn btn-outline">Cancel</a>
-                </div>
-            </form>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category_id" class="form-control bg-brand-charcoal" required>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if item and item.category_id == cat.id %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Image URL</label>
+                <input type="text" name="image_url" class="form-control"
+                       placeholder="/static/images/burger.jpg" value="{{ item.image_url if item else '' }}">
+            </div>
         </div>
-    </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="4"
+                      placeholder="Short description of the item...">{{ item.description if item else '' }}</textarea>
+        </div>
+
+        <!-- Availability Toggle -->
+        <label class="flex items-center gap-4 p-4 bg-neutral-900 border border-white/5 rounded-2xl cursor-pointer hover:bg-white/5 transition-all">
+            <input type="checkbox" name="is_available" id="is_available"
+                   {% if not item or item.is_available %}checked{% endif %}
+                   class="w-5 h-5 rounded accent-brand-orange cursor-pointer">
+            <div>
+                <p class="font-bold text-white text-sm">Item is currently available</p>
+                <p class="text-xs text-neutral-400 mt-0.5">Uncheck to hide from the menu temporarily</p>
+            </div>
+        </label>
+
+        <div class="flex gap-4 mt-2">
+            <button type="submit" class="btn btn-primary shadow-orange-glow flex-1">
+                <i class="bi bi-floppy-fill"></i> Save Item
+            </button>
+            <a href="{{ url_for('admin.manage_items') }}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
 </div>
 {% endblock %}

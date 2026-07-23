@@ -1,176 +1,99 @@
-{% extends "base.html" %}
+{% extends "admin/base_admin.html" %}
+{% block title %}Admin Dashboard - Sohaib Restaurant{% endblock %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block admin_content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-display font-black text-white flex items-center gap-3">
+        <i class="bi bi-speedometer2 text-brand-orange"></i> Dashboard Overview
+    </h1>
+</div>
 
-{% block extra_css %}
-<style>
-    .admin-layout {
-        display: flex;
-        gap: 30px;
-        align-items: flex-start;
-    }
-    .admin-sidebar {
-        width: 250px;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 20px;
-        position: sticky;
-        top: 90px;
-    }
-    .admin-nav {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-    .admin-link {
-        padding: 12px 15px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: var(--transition);
-        color: var(--text-muted);
-    }
-    .admin-link:hover {
-        background: rgba(255, 255, 255, 0.05);
-        color: white;
-    }
-    .admin-link.active {
-        background: var(--primary);
-        color: white;
-        font-weight: bold;
-    }
-    .admin-content {
-        flex: 1;
-    }
-    
-    .stat-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-    .stat-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-    
-    @media (max-width: 768px) {
-        .admin-layout { flex-direction: column; }
-        .admin-sidebar { width: 100%; position: static; }
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="admin-layout">
-    <aside class="admin-sidebar">
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="bi bi-shield-lock-fill"></i> Admin Panel</h3>
-        <div class="admin-nav">
-            <a href="{{ url_for('admin.dashboard') }}" class="admin-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="bi bi-receipt"></i> Orders</a>
-            <a href="{{ url_for('admin.manage_items') }}" class="admin-link"><i class="fas fa-hamburger"></i> Menu Items</a>
-            <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+    <!-- Revenue -->
+    <div class="card p-5 flex items-center gap-4 border-l-2 border-emerald-500">
+        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-xl flex-shrink-0">
+            <i class="bi bi-wallet2"></i>
         </div>
-    </aside>
+        <div>
+            <p class="text-xl font-display font-black text-white leading-none">Rs. {{ "%.0f"|format(total_revenue) }}</p>
+            <p class="text-xs text-neutral-400 mt-1">Total Revenue</p>
+        </div>
+    </div>
+    <!-- Total Orders -->
+    <div class="card p-5 flex items-center gap-4 border-l-2 border-blue-500">
+        <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 text-xl flex-shrink-0">
+            <i class="bi bi-box-seam"></i>
+        </div>
+        <div>
+            <p class="text-xl font-display font-black text-white leading-none">{{ total_orders }}</p>
+            <p class="text-xs text-neutral-400 mt-1">Total Orders</p>
+        </div>
+    </div>
+    <!-- Pending -->
+    <div class="card p-5 flex items-center gap-4 border-l-2 border-yellow-500">
+        <div class="w-12 h-12 bg-yellow-500/10 border border-yellow-500/20 rounded-xl flex items-center justify-center text-yellow-400 text-xl flex-shrink-0">
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div>
+            <p class="text-xl font-display font-black text-white leading-none">{{ pending_orders }}</p>
+            <p class="text-xs text-neutral-400 mt-1">Pending Orders</p>
+        </div>
+    </div>
+    <!-- Users -->
+    <div class="card p-5 flex items-center gap-4 border-l-2 border-purple-500">
+        <div class="w-12 h-12 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center justify-center text-purple-400 text-xl flex-shrink-0">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+            <p class="text-xl font-display font-black text-white leading-none">{{ total_users }}</p>
+            <p class="text-xs text-neutral-400 mt-1">Registered Users</p>
+        </div>
+    </div>
+</div>
 
-    <div class="admin-content">
-        <h1 style="margin-bottom: 30px;">Dashboard Overview</h1>
-        
-        <div class="stat-cards">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(46, 204, 113, 0.2); color: var(--success);">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.5rem; margin: 0;">Rs. {{ "%.0f"|format(total_revenue) }}</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Total Revenue</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(52, 152, 219, 0.2); color: var(--info);">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.5rem; margin: 0;">{{ total_orders }}</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Total Orders</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(241, 196, 15, 0.2); color: var(--warning);">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.5rem; margin: 0;">{{ pending_orders }}</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Pending Orders</p>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(155, 89, 182, 0.2); color: #9b59b6;">
-                    <i class="bi bi-person-fills"></i>
-                </div>
-                <div>
-                    <h3 style="font-size: 1.5rem; margin: 0;">{{ total_users }}</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Registered Users</p>
-                </div>
-            </div>
-        </div>
-        
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="margin: 0;">Recent Orders</h3>
-                <a href="{{ url_for('admin.manage_orders') }}" class="btn btn-outline btn-sm">View All</a>
-            </div>
-            
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
-                    <thead>
-                        <tr style="background: rgba(255,255,255,0.05); text-align: left;">
-                            <th style="padding: 12px; border-bottom: 1px solid var(--border);">Order ID</th>
-                            <th style="padding: 12px; border-bottom: 1px solid var(--border);">Customer</th>
-                            <th style="padding: 12px; border-bottom: 1px solid var(--border);">Amount</th>
-                            <th style="padding: 12px; border-bottom: 1px solid var(--border);">Status</th>
-                            <th style="padding: 12px; border-bottom: 1px solid var(--border);">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in recent_orders %}
-                        <tr>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--border);">#{{ order.id }}</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--border);">{{ order.user.username }}</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--border);">Rs. {{ "%.0f"|format(order.total_amount) }}</td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--border);">
-                                <span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: rgba(255,255,255,0.1); color: {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% elif order.status == 'pending' %}var(--warning){% else %}var(--info){% endif %};">
-                                    {{ order.status_display }}
-                                </span>
-                            </td>
-                            <td style="padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">{{ order.created_at.strftime('%b %d, %H:%M') }}</td>
-                        </tr>
-                        {% else %}
-                        <tr><td colspan="5" style="text-align: center; padding: 20px;">No recent orders.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- Recent Orders Table -->
+<div class="card p-6">
+    <div class="flex justify-between items-center mb-5 border-b border-white/5 pb-4">
+        <h3 class="font-display font-black text-white text-base flex items-center gap-2">
+            <i class="bi bi-clock-history text-brand-orange"></i> Recent Orders
+        </h3>
+        <a href="{{ url_for('admin.manage_orders') }}" class="btn btn-outline btn-sm text-xs px-4 py-2">View All</a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[550px]">
+            <thead>
+                <tr class="text-left text-xs text-neutral-500 uppercase tracking-wider">
+                    <th class="pb-3 pr-4">Order</th>
+                    <th class="pb-3 pr-4">Customer</th>
+                    <th class="pb-3 pr-4">Amount</th>
+                    <th class="pb-3 pr-4">Status</th>
+                    <th class="pb-3">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr class="border-t border-white/5 hover:bg-white/2 transition-all">
+                    <td class="py-3 pr-4 font-bold text-white">#{{ order.id }}</td>
+                    <td class="py-3 pr-4 text-neutral-300">{{ order.user.username }}</td>
+                    <td class="py-3 pr-4 font-display font-bold text-brand-orange">Rs. {{ "%.0f"|format(order.total_amount) }}</td>
+                    <td class="py-3 pr-4">
+                        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full
+                            {% if order.status == 'delivered' %}bg-emerald-500/15 text-emerald-400
+                            {% elif order.status == 'cancelled' %}bg-red-500/15 text-red-400
+                            {% elif order.status == 'pending' %}bg-yellow-500/15 text-yellow-400
+                            {% else %}bg-blue-500/15 text-blue-400{% endif %}">
+                            {{ order.status_display }}
+                        </span>
+                    </td>
+                    <td class="py-3 text-neutral-500 text-xs">{{ order.created_at.strftime('%b %d, %H:%M') }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="py-10 text-center text-neutral-500">No recent orders.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

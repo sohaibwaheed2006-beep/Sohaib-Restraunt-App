@@ -1,190 +1,157 @@
 {% extends "base.html" %}
-
-{% block title %}Track Order #{{ order.id }}{% endblock %}
-
-{% block extra_css %}
-<style>
-    .progress-bar-container {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.1);
-        height: 10px;
-        border-radius: 5px;
-        margin: 40px 0;
-        position: relative;
-    }
-    .progress-fill {
-        height: 100%;
-        background: var(--primary);
-        border-radius: 5px;
-        transition: width 1s ease-in-out;
-        position: relative;
-    }
-    .progress-fill::after {
-        content: '';
-        position: absolute;
-        right: -10px;
-        top: -5px;
-        width: 20px;
-        height: 20px;
-        background: white;
-        border: 4px solid var(--primary);
-        border-radius: 50%;
-        box-shadow: 0 0 10px rgba(200, 16, 46, 0.5);
-    }
-    .status-points {
-        display: flex;
-        justify-content: space-between;
-        position: absolute;
-        width: 100%;
-        top: -30px;
-    }
-    .status-point {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 20%;
-        text-align: center;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-    }
-    .status-point.active {
-        color: white;
-        font-weight: bold;
-    }
-    .status-point i {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
-        color: inherit;
-    }
-    .status-point.active i {
-        color: var(--primary);
-    }
-</style>
-{% endblock %}
+{% block title %}Track Order #{{ order.id }} - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{{ url_for('orders.history') }}" style="color: var(--text-muted);"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+<!-- Back Navigation -->
+<div class="mb-6">
+    <a href="{{ url_for('orders.history') }}" class="text-sm text-neutral-400 hover:text-brand-orange flex items-center gap-2 transition-all">
+        <i class="bi bi-arrow-left"></i> Back to Orders
+    </a>
 </div>
 
-<div class="form-container" style="max-width: 800px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
-        <div>
-            <h1 style="margin: 0;">Order #{{ order.id }}</h1>
-            <p style="color: var(--text-muted);">Placed on {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
-        </div>
-        <div>
-            <span style="display: inline-block; padding: 6px 15px; border-radius: 20px; font-weight: bold; text-transform: uppercase; background: rgba(255,255,255,0.1); color: {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% else %}var(--info){% endif %};">
+<!-- Main Container -->
+<div class="max-w-3xl mx-auto">
+    <div class="card p-6 md:p-10 flex flex-col gap-8">
+
+        <!-- Order Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-6">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-display font-black text-white">Order #{{ order.id }}</h1>
+                <p class="text-sm text-neutral-400 mt-1">Placed on {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            </div>
+            <span class="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-full
+                {% if order.status == 'delivered' %}bg-emerald-500/15 text-emerald-400 border border-emerald-500/20
+                {% elif order.status == 'cancelled' %}bg-red-500/15 text-red-400 border border-red-500/20
+                {% elif order.status == 'preparing' %}bg-brand-orange/15 text-brand-orange border border-brand-orange/20
+                {% else %}bg-blue-500/15 text-blue-400 border border-blue-500/20{% endif %}">
                 {{ order.status_display }}
             </span>
         </div>
-    </div>
 
-    <!-- Live Tracking Progress -->
-    {% if order.status != 'cancelled' %}
-    <div style="padding: 20px 0; margin-bottom: 30px; border-bottom: 1px solid var(--border);">
-        <h3 style="margin-bottom: 40px; text-align: center;">Order Status</h3>
-        
-        <div class="progress-bar-container">
-            <div class="progress-fill" style="width: {{ order.status_percentage }}%;"></div>
-            
-            <div class="status-points">
-                <div class="status-point {% if order.status_percentage >= 10 %}active{% endif %}">
-                    <i class="fas fa-clock"></i>
-                    <span>Pending</span>
-                </div>
-                <div class="status-point {% if order.status_percentage >= 25 %}active{% endif %}">
-                    <i class="bi bi-check-lg-circle"></i>
-                    <span>Confirmed</span>
-                </div>
-                <div class="status-point {% if order.status_percentage >= 50 %}active{% endif %}">
-                    <i class="bi bi-fire"></i>
-                    <span>Preparing</span>
-                </div>
-                <div class="status-point {% if order.status_percentage >= 75 %}active{% endif %}">
-                    <i class="fas fa-motorcycle"></i>
-                    <span>On the Way</span>
-                </div>
-                <div class="status-point {% if order.status_percentage >= 100 %}active{% endif %}">
-                    <i class="bi bi-box-seam-open"></i>
-                    <span>Delivered</span>
-                </div>
+        <!-- Live Tracking Stepper -->
+        {% if order.status != 'cancelled' %}
+        <div class="flex flex-col gap-6">
+            <h3 class="text-lg font-display font-bold text-white text-center">Live Order Progress</h3>
+
+            <!-- Progress Bar -->
+            <div class="relative w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-brand-orange to-brand-red rounded-full transition-all duration-1000"
+                     style="width: {{ order.status_percentage }}%;"></div>
             </div>
-        </div>
-    </div>
-    {% else %}
-    <div style="padding: 20px; background: rgba(231, 76, 60, 0.1); border: 1px solid var(--danger); border-radius: var(--radius); text-align: center; margin-bottom: 30px;">
-        <i class="bi bi-x-lg-circle" style="font-size: 3rem; color: var(--danger); margin-bottom: 10px;"></i>
-        <h3 style="color: var(--danger); margin-bottom: 5px;">Order Cancelled</h3>
-        <p style="color: var(--text-muted);">This order has been cancelled. If you have questions, please contact support.</p>
-    </div>
-    {% endif %}
 
-    <!-- Order Details -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-        <div>
-            <h3 style="margin-bottom: 15px;">Order Items</h3>
-            <ul style="list-style: none; padding: 0;">
-                {% for item in order.items %}
-                <li style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
-                    <div>
-                        <span style="font-weight: bold; color: var(--primary);">{{ item.quantity }}x</span> {{ item.menu_item.name }}
+            <!-- Step Icons -->
+            <div class="grid grid-cols-5 gap-1 text-center">
+                {% set steps = [
+                    ('pending', 'bi-clock-fill', 'Pending', 10),
+                    ('confirmed', 'bi-patch-check-fill', 'Confirmed', 25),
+                    ('preparing', 'bi-fire', 'Preparing', 50),
+                    ('out_for_delivery', 'bi-bicycle', 'On The Way', 75),
+                    ('delivered', 'bi-box-seam', 'Delivered', 100)
+                ] %}
+                {% for step_status, icon, label, pct in steps %}
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all
+                        {% if order.status_percentage >= pct %}
+                            bg-brand-orange border-brand-orange text-white shadow-orange-glow
+                        {% else %}
+                            bg-white/5 border-white/10 text-neutral-500
+                        {% endif %}">
+                        <i class="bi {{ icon }} text-sm"></i>
                     </div>
-                    <span>Rs. {{ "%.0f"|format(item.subtotal) }}</span>
-                </li>
+                    <span class="text-[10px] font-bold {% if order.status_percentage >= pct %}text-white{% else %}text-neutral-500{% endif %} leading-tight">
+                        {{ label }}
+                    </span>
+                </div>
                 {% endfor %}
-            </ul>
-            
-            <div style="margin-top: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--text-muted);">
-                    <span>Subtotal</span>
-                    <span>Rs. {{ "%.0f"|format(order.total_amount - 100) }}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--text-muted);">
-                    <span>Delivery Fee</span>
-                    <span>Rs. 100</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-weight: bold; font-size: 1.2rem; color: var(--accent);">
-                    <span>Total</span>
-                    <span>Rs. {{ "%.0f"|format(order.total_amount) }}</span>
-                </div>
             </div>
         </div>
-        
-        <div>
-            <h3 style="margin-bottom: 15px;">Delivery Info</h3>
-            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
-                <p style="margin-bottom: 10px;"><strong><i class="bi bi-geo-alt-fill" style="color: var(--primary); width: 20px;"></i> Address:</strong><br>
-                <span style="color: var(--text-muted);">{{ order.delivery_address }}</span></p>
-                
-                <p style="margin-bottom: 10px;"><strong><i class="bi bi-telephone-fill" style="color: var(--primary); width: 20px;"></i> Phone:</strong><br>
-                <span style="color: var(--text-muted);">{{ order.phone }}</span></p>
-                
-                <p><strong><i class="fas fa-credit-card" style="color: var(--primary); width: 20px;"></i> Payment:</strong><br>
-                <span style="color: var(--text-muted); text-transform: capitalize;">{{ order.payment_method }}</span>
-                {% if order.payment and order.payment.status == 'completed' %}
-                    <span style="color: var(--success); font-size: 0.8rem; margin-left: 5px;"><i class="bi bi-check-lg-circle"></i> Paid</span>
-                {% else %}
-                    <span style="color: var(--warning); font-size: 0.8rem; margin-left: 5px;"><i class="fas fa-exclamation-circle"></i> Unpaid</span>
-                {% endif %}
-                </p>
+        {% else %}
+        <!-- Cancelled State -->
+        <div class="flex flex-col items-center gap-4 py-6 bg-red-500/5 border border-red-500/15 rounded-2xl text-center">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 text-2xl">
+                <i class="bi bi-x-circle-fill"></i>
             </div>
-            
-            {% if not order.payment and order.payment_method == 'card' and order.status != 'cancelled' %}
-            <a href="{{ url_for('payment.pay', order_id=order.id) }}" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
-                <i class="fas fa-credit-card"></i> Pay Now
-            </a>
-            {% endif %}
+            <div>
+                <h3 class="text-lg font-bold text-red-400">Order Cancelled</h3>
+                <p class="text-sm text-neutral-400 mt-1">This order has been cancelled. Contact support for questions.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Order Items & Delivery Info -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-white/5 pt-6">
+
+            <!-- Items -->
+            <div>
+                <h3 class="font-display font-black text-white mb-4 flex items-center gap-2">
+                    <i class="bi bi-bag-fill text-brand-orange text-sm"></i> Order Items
+                </h3>
+                <ul class="flex flex-col gap-3">
+                    {% for item in order.items %}
+                    <li class="flex justify-between text-sm border-b border-white/5 pb-2">
+                        <div>
+                            <span class="text-brand-orange font-bold">{{ item.quantity }}×</span>
+                            <span class="text-neutral-200 ml-1">{{ item.menu_item.name }}</span>
+                        </div>
+                        <span class="text-neutral-300 font-semibold">Rs. {{ "%.0f"|format(item.subtotal) }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-4 flex flex-col gap-2 text-sm">
+                    <div class="flex justify-between text-neutral-400">
+                        <span>Subtotal</span><span class="text-white">Rs. {{ "%.0f"|format(order.total_amount - 100) }}</span>
+                    </div>
+                    <div class="flex justify-between text-neutral-400">
+                        <span>Delivery Fee</span><span class="text-white">Rs. 100</span>
+                    </div>
+                    <div class="flex justify-between border-t border-white/5 pt-2 mt-1 font-display font-black">
+                        <span class="text-white">Total</span>
+                        <span class="text-brand-orange">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Info -->
+            <div>
+                <h3 class="font-display font-black text-white mb-4 flex items-center gap-2">
+                    <i class="bi bi-geo-alt-fill text-brand-orange text-sm"></i> Delivery Info
+                </h3>
+                <div class="bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col gap-4 text-sm">
+                    <div>
+                        <p class="text-xs text-neutral-500 uppercase tracking-wider mb-1">Address</p>
+                        <p class="text-neutral-200">{{ order.delivery_address }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-neutral-500 uppercase tracking-wider mb-1">Phone</p>
+                        <p class="text-neutral-200">{{ order.phone }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-neutral-500 uppercase tracking-wider mb-1">Payment</p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-neutral-200 capitalize">{{ order.payment_method }}</span>
+                            {% if order.payment and order.payment.status == 'completed' %}
+                            <span class="text-[10px] font-black px-2 py-0.5 bg-emerald-500/15 text-emerald-400 rounded-full"><i class="bi bi-check-lg"></i> Paid</span>
+                            {% else %}
+                            <span class="text-[10px] font-black px-2 py-0.5 bg-yellow-500/15 text-yellow-400 rounded-full">Pending</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if not order.payment and order.payment_method == 'card' and order.status != 'cancelled' %}
+                <a href="{{ url_for('payment.pay', order_id=order.id) }}" class="btn btn-primary w-full mt-4 shadow-orange-glow">
+                    <i class="bi bi-credit-card-fill"></i> Pay Now
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
 
 {% if order.status not in ['delivered', 'cancelled'] %}
-<!-- Auto-refresh script for live tracking simulation -->
 <script>
-    setTimeout(function() {
-        location.reload();
-    }, 30000); // Reload every 30 seconds
+    // Auto-refresh every 30s for live tracking
+    setTimeout(() => location.reload(), 30000);
 </script>
 {% endif %}
 {% endblock %}

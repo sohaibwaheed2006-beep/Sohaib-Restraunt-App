@@ -1,50 +1,65 @@
 {% extends "base.html" %}
-
-{% block title %}Payment{% endblock %}
+{% block title %}Complete Payment - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<div class="form-container" style="max-width: 600px; text-align: center;">
-    <h1 style="margin-bottom: 20px;"><i class="fas fa-credit-card"></i> Complete Payment</h1>
-    
-    <p style="color: var(--text-muted); margin-bottom: 30px;">
-        Order #{{ order.id }} • Total: <span style="font-weight: bold; color: white;">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
-    </p>
+<div class="min-h-[70vh] flex items-center justify-center py-8">
+    <div class="form-container max-w-lg w-full text-center">
 
-    <!-- Simulated Payment Form -->
-    <form method="POST" action="{{ url_for('payment.pay', order_id=order.id) }}" style="text-align: left;">
-        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
-            <div class="form-group">
-                <label>Card Number</label>
-                <div style="position: relative;">
-                    <i class="far fa-credit-card" style="position: absolute; left: 15px; top: 15px; color: var(--text-muted);"></i>
-                    <input type="text" class="form-control" placeholder="0000 0000 0000 0000" style="padding-left: 40px;" required>
-                </div>
+        <!-- Header -->
+        <div class="flex flex-col items-center gap-4 mb-8">
+            <div class="w-16 h-16 bg-brand-orange/10 border border-brand-orange/20 rounded-2xl flex items-center justify-center text-brand-orange text-3xl shadow-orange-glow">
+                <i class="bi bi-credit-card-fill"></i>
             </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="form-group">
-                    <label>Expiry Date</label>
-                    <input type="text" class="form-control" placeholder="MM/YY" required>
-                </div>
-                <div class="form-group">
-                    <label>CVC</label>
-                    <input type="password" class="form-control" placeholder="123" required maxlength="4">
-                </div>
-            </div>
-            
-            <div class="form-group" style="margin-bottom: 0;">
-                <label>Name on Card</label>
-                <input type="text" class="form-control" placeholder="e.g. John Doe" required>
+            <div>
+                <h1 class="text-2xl font-display font-black text-white">Complete Payment</h1>
+                <p class="text-sm text-neutral-400 mt-2">
+                    Order #{{ order.id }} &bull; Total:
+                    <span class="font-bold text-brand-orange">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+                </p>
             </div>
         </div>
-        
-        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.2rem; padding: 15px;">
-            <i class="fas fa-lock"></i> Pay Rs. {{ "%.0f"|format(order.total_amount) }} Securely
-        </button>
-    </form>
-    
-    <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">
-        <i class="fas fa-shield-alt"></i> This is a secure 256-bit encrypted simulated payment gateway. No real money will be charged.
-    </p>
+
+        <!-- Simulated Card Form -->
+        <form method="POST" action="{{ url_for('payment.pay', order_id=order.id) }}" class="flex flex-col gap-5 text-left">
+            <div class="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col gap-5">
+
+                <div class="form-group">
+                    <label for="card_number" class="flex items-center gap-2"><i class="bi bi-credit-card text-brand-orange"></i> Card Number</label>
+                    <div class="relative">
+                        <input type="text" id="card_number" class="form-control pl-11"
+                               placeholder="0000 0000 0000 0000" maxlength="19" required
+                               oninput="this.value=this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim()">
+                        <i class="bi bi-lock-fill absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="expiry">Expiry</label>
+                        <input type="text" id="expiry" class="form-control" placeholder="MM / YY" maxlength="7" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvc">CVC</label>
+                        <input type="password" id="cvc" class="form-control" placeholder="•••" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card_name">Name on Card</label>
+                    <input type="text" id="card_name" class="form-control" placeholder="e.g. Sohaib Waheed" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary py-4 text-base shadow-orange-glow">
+                <i class="bi bi-shield-lock-fill"></i>
+                Pay Rs. {{ "%.0f"|format(order.total_amount) }} Securely
+            </button>
+        </form>
+
+        <p class="text-xs text-neutral-500 mt-6 flex items-center justify-center gap-1.5">
+            <i class="bi bi-shield-fill-check text-emerald-400"></i>
+            256-bit SSL encrypted. This is a simulated payment — no real charge will be made.
+        </p>
+    </div>
 </div>
 {% endblock %}

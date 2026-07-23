@@ -1,68 +1,79 @@
 {% extends "base.html" %}
-
-{% block title %}Shopping Cart{% endblock %}
+{% block title %}Shopping Cart - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<h1 style="margin-bottom: 30px;"><i class="bi bi-cart-fill"></i> Your Cart</h1>
+<div class="mb-8">
+    <h1 class="text-3xl font-display font-black text-white flex items-center gap-3">
+        <i class="bi bi-cart-fill text-brand-orange"></i> Your Cart
+    </h1>
+</div>
 
 {% if cart_items %}
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
-    <!-- Cart Items -->
-    <div>
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: rgba(255,255,255,0.05); text-align: left;">
-                        <th style="padding: 15px; border-bottom: 1px solid var(--border);">Item</th>
-                        <th style="padding: 15px; border-bottom: 1px solid var(--border);">Price</th>
-                        <th style="padding: 15px; border-bottom: 1px solid var(--border);">Quantity</th>
-                        <th style="padding: 15px; border-bottom: 1px solid var(--border);">Subtotal</th>
-                        <th style="padding: 15px; border-bottom: 1px solid var(--border);"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart_items %}
-                    <tr>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border);">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <img src="{{ item.menu_item.image_url }}" alt="{{ item.menu_item.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" onerror="this.src='/static/images/default_food.jpg'">
-                                <div>
-                                    <h3 style="margin-bottom: 5px; font-size: 1.2rem;">{{ item.menu_item.name }}</h3>
-                                    {% if item.options %}
-                                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">{{ item.options }}</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </td>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border);">Rs. {{ "%.0f"|format(item.menu_item.price + (item.options_total or 0)) }}</td>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border);">
-                            <form action="{{ url_for('cart.update_cart', cart_item_id=item.id) }}" method="POST" style="display: flex; align-items: center; gap: 10px;">
-                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px; padding: 5px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; border-radius: 4px;">
-                                <button type="submit" style="background: none; border: none; color: var(--info); cursor: pointer;"><i class="fas fa-sync-alt"></i></button>
-                            </form>
-                        </td>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: bold;">
-                            <div style="font-weight: bold; font-size: 1.1rem; min-width: 100px;">
-                                Rs. {{ "%.0f"|format((item.menu_item.price + (item.options_total or 0)) * item.quantity) }}
-                            </div>
-                        </td>
-                        <td style="padding: 15px; border-bottom: 1px solid var(--border); text-align: right;">
-                            <form action="{{ url_for('cart.remove_from_cart', cart_item_id=item.id) }}" method="POST">
-                                <button type="submit" class="btn btn-outline" style="color: var(--danger); border-color: var(--danger); padding: 5px 10px;">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+    <!-- Cart Items Table -->
+    <div class="lg:col-span-2 flex flex-col gap-4">
+        {% for item in cart_items %}
+        <div class="card flex flex-col sm:flex-row items-center gap-5 p-5">
+            <!-- Item Image -->
+            <a href="{{ url_for('menu.item_detail', item_id=item.menu_item.id) }}" class="flex-shrink-0">
+                <img src="{{ item.menu_item.image_url }}" alt="{{ item.menu_item.name }}"
+                     class="w-20 h-20 object-cover rounded-2xl border border-white/10"
+                     onerror="this.src='/static/images/default_food.jpg'">
+            </a>
+
+            <!-- Item Info -->
+            <div class="flex-1 min-w-0">
+                <a href="{{ url_for('menu.item_detail', item_id=item.menu_item.id) }}"
+                   class="font-bold text-white text-base hover:text-brand-orange transition-all line-clamp-1">
+                    {{ item.menu_item.name }}
+                </a>
+                {% if item.options %}
+                <p class="text-xs text-neutral-400 mt-1">{{ item.options }}</p>
+                {% endif %}
+                <p class="text-brand-orange font-display font-black text-sm mt-1">
+                    Rs. {{ "%.0f"|format(item.menu_item.price + (item.options_total or 0)) }} each
+                </p>
+            </div>
+
+            <!-- Quantity Update -->
+            <form action="{{ url_for('cart.update_cart', cart_item_id=item.id) }}" method="POST"
+                  class="flex items-center gap-2">
+                <div class="flex items-center border border-white/10 rounded-full overflow-hidden bg-brand-charcoal px-2 py-1">
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1"
+                           class="bg-transparent text-white w-12 text-center font-bold text-sm focus:outline-none">
+                </div>
+                <button type="submit"
+                        class="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-neutral-400 hover:text-brand-orange transition-all">
+                    <i class="bi bi-arrow-repeat text-xs"></i>
+                </button>
+            </form>
+
+            <!-- Subtotal -->
+            <div class="text-right flex-shrink-0">
+                <p class="font-display font-black text-brand-orange text-base">
+                    Rs. {{ "%.0f"|format((item.menu_item.price + (item.options_total or 0)) * item.quantity) }}
+                </p>
+            </div>
+
+            <!-- Remove -->
+            <form action="{{ url_for('cart.remove_from_cart', cart_item_id=item.id) }}" method="POST">
+                <button type="submit"
+                        class="w-9 h-9 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 rounded-full text-red-400 hover:text-red-300 transition-all">
+                    <i class="bi bi-trash-fill text-xs"></i>
+                </button>
+            </form>
         </div>
-        
-        <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-            <a href="{{ url_for('menu.browse') }}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Continue Shopping</a>
+        {% endfor %}
+
+        <!-- Bottom Actions -->
+        <div class="flex justify-between items-center mt-2">
+            <a href="{{ url_for('menu.browse') }}" class="btn btn-outline text-sm px-5 py-2.5">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
             <form action="{{ url_for('cart.clear_cart') }}" method="POST">
-                <button type="submit" class="btn" style="background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger);">
+                <button type="submit"
+                        class="btn text-sm px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-400 hover:text-red-300 transition-all rounded-full">
                     <i class="bi bi-trash-fill"></i> Clear Cart
                 </button>
             </form>
@@ -70,48 +81,47 @@
     </div>
 
     <!-- Order Summary -->
-    <div>
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; position: sticky; top: 90px;">
-            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Order Summary</h3>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--text-muted);">
-                <span>Subtotal</span>
-                <span>Rs. {{ "%.0f"|format(total) }}</span>
+    <div class="sticky top-24">
+        <div class="card p-6 flex flex-col gap-5">
+            <h3 class="text-lg font-display font-black text-white border-b border-white/5 pb-4">Order Summary</h3>
+
+            <div class="flex flex-col gap-3 text-sm">
+                <div class="flex justify-between text-neutral-400">
+                    <span>Subtotal</span>
+                    <span class="text-white font-semibold">Rs. {{ "%.0f"|format(total) }}</span>
+                </div>
+                <div class="flex justify-between text-neutral-400">
+                    <span>Delivery Fee</span>
+                    <span class="text-white font-semibold">Rs. 100</span>
+                </div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--text-muted);">
-                <span>Delivery Fee</span>
-                <span>Rs. 100</span>
+
+            <div class="flex justify-between items-center border-t border-white/5 pt-4">
+                <span class="font-display font-bold text-white text-base">Total</span>
+                <span class="font-display font-black text-brand-orange text-xl">Rs. {{ "%.0f"|format(total + 100) }}</span>
             </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 25px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 1.2rem; font-weight: bold; color: white;">
-                <span>Total</span>
-                <span style="color: var(--accent);">Rs. {{ "%.0f"|format(total + 100) }}</span>
-            </div>
-            
-            <a href="{{ url_for('orders.checkout') }}" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">
-                Proceed to Checkout <i class="fas fa-arrow-right"></i>
+
+            <a href="{{ url_for('orders.checkout') }}"
+               class="btn btn-primary py-3.5 text-base shadow-orange-glow mt-2">
+                <i class="bi bi-lock-fill"></i> Proceed to Checkout
             </a>
         </div>
     </div>
 </div>
 
-<style>
-@media (max-width: 900px) {
-    div[style*="grid-template-columns: 2fr 1fr"] {
-        grid-template-columns: 1fr !important;
-    }
-}
-</style>
-
 {% else %}
-<div style="text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border);">
-    <i class="fas fa-shopping-basket" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
-    <h2>Your cart is empty</h2>
-    <p style="color: var(--text-muted); margin-bottom: 30px;">Looks like you haven't added any delicious food yet.</p>
-    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;">
-        Browse Menu
+<!-- Empty Cart State -->
+<div class="card py-20 px-6 text-center flex flex-col items-center gap-5 max-w-md mx-auto mt-8">
+    <div class="w-24 h-24 bg-neutral-900 border border-white/5 rounded-full flex items-center justify-center text-neutral-500 text-4xl">
+        <i class="bi bi-cart-x"></i>
+    </div>
+    <div>
+        <h2 class="text-2xl font-display font-black text-white mb-2">Your cart is empty</h2>
+        <p class="text-sm text-neutral-400">Looks like you haven't added any delicious food yet!</p>
+    </div>
+    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary shadow-orange-glow mt-2">
+        <i class="bi bi-basket2-fill"></i> Browse Menu
     </a>
 </div>
 {% endif %}
-
 {% endblock %}

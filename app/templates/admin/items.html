@@ -1,71 +1,77 @@
-{% extends "admin/dashboard.html" %}
+{% extends "admin/base_admin.html" %}
+{% block title %}Menu Items - Admin{% endblock %}
 
-{% block title %}Manage Items{% endblock %}
+{% block admin_content %}
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <h1 class="text-2xl font-display font-black text-white flex items-center gap-3">
+        <i class="bi bi-egg-fried text-brand-orange"></i> Menu Items
+    </h1>
+    <a href="{{ url_for('admin.add_item') }}" class="btn btn-primary shadow-orange-glow">
+        <i class="bi bi-plus-lg"></i> Add New Item
+    </a>
+</div>
 
-{% block content %}
-<div class="admin-layout">
-    <aside class="admin-sidebar">
-        <h3 style="margin-bottom: 20px; color: var(--primary);"><i class="bi bi-shield-lock-fill"></i> Admin Panel</h3>
-        <div class="admin-nav">
-            <a href="{{ url_for('admin.dashboard') }}" class="admin-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('admin.manage_orders') }}" class="admin-link"><i class="bi bi-receipt"></i> Orders</a>
-            <a href="{{ url_for('admin.manage_items') }}" class="admin-link active"><i class="fas fa-hamburger"></i> Menu Items</a>
-            <a href="{{ url_for('admin.manage_categories') }}" class="admin-link"><i class="fas fa-list"></i> Categories</a>
-        </div>
-    </aside>
-
-    <div class="admin-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h1 style="margin: 0;">Menu Items</h1>
-            <a href="{{ url_for('admin.add_item') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add New Item</a>
-        </div>
-        
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px;">
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
-                    <thead>
-                        <tr style="background: rgba(255,255,255,0.05); text-align: left;">
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Image</th>
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Name</th>
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Category</th>
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Price</th>
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Status</th>
-                            <th style="padding: 15px; border-bottom: 1px solid var(--border);">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                        <tr>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border);">
-                                <img src="{{ item.image_url }}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" onerror="this.src='/static/images/default_food.jpg'">
-                            </td>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: bold;">{{ item.name }}</td>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border);">{{ item.category.name }}</td>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border);">Rs. {{ "%.0f"|format(item.price) }}</td>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border);">
-                                {% if item.is_available %}
-                                <span style="color: var(--success);"><i class="bi bi-check-lg-circle"></i> Available</span>
-                                {% else %}
-                                <span style="color: var(--danger);"><i class="bi bi-x-lg-circle"></i> Unavailable</span>
-                                {% endif %}
-                            </td>
-                            <td style="padding: 15px; border-bottom: 1px solid var(--border);">
-                                <div style="display: flex; gap: 10px;">
-                                    <a href="{{ url_for('admin.edit_item', item_id=item.id) }}" class="btn btn-outline btn-sm" style="padding: 5px 10px;"><i class="bi bi-pencil-fill"></i></a>
-                                    
-                                    <form action="{{ url_for('admin.delete_item', item_id=item.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                        <button type="submit" class="btn btn-sm" style="background: rgba(231, 76, 60, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 5px 10px;">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[700px]">
+            <thead>
+                <tr class="border-b border-white/5 text-xs text-neutral-500 uppercase tracking-wider">
+                    <th class="p-4 text-left">Item</th>
+                    <th class="p-4 text-left">Category</th>
+                    <th class="p-4 text-left">Price</th>
+                    <th class="p-4 text-left">Status</th>
+                    <th class="p-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr class="border-t border-white/5 hover:bg-white/2 transition-all">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}"
+                                 class="w-11 h-11 object-cover rounded-xl border border-white/10"
+                                 onerror="this.src='/static/images/default_food.jpg'">
+                            <span class="font-bold text-white">{{ item.name }}</span>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <span class="text-xs font-semibold text-neutral-400 bg-white/5 border border-white/5 px-3 py-1 rounded-full">
+                            {{ item.category.name }}
+                        </span>
+                    </td>
+                    <td class="p-4 font-display font-bold text-brand-orange">Rs. {{ "%.0f"|format(item.price) }}</td>
+                    <td class="p-4">
+                        {% if item.is_available %}
+                        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400">
+                            <i class="bi bi-check-lg"></i> Available
+                        </span>
+                        {% else %}
+                        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-red-500/15 text-red-400">
+                            <i class="bi bi-x-lg"></i> Unavailable
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4">
+                        <div class="flex justify-end gap-2">
+                            <a href="{{ url_for('admin.edit_item', item_id=item.id) }}"
+                               class="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-neutral-400 hover:text-white transition-all">
+                                <i class="bi bi-pencil-fill text-xs"></i>
+                            </a>
+                            <form action="{{ url_for('admin.delete_item', item_id=item.id) }}" method="POST"
+                                  onsubmit="return confirm('Delete this item?')">
+                                <button type="submit"
+                                        class="w-8 h-8 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 rounded-full text-red-400 hover:text-red-300 transition-all">
+                                    <i class="bi bi-trash-fill text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="py-12 text-center text-neutral-500">No menu items yet. Add one above.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

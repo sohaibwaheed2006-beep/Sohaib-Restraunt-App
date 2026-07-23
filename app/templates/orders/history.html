@@ -1,55 +1,77 @@
 {% extends "base.html" %}
-
-{% block title %}Order History{% endblock %}
+{% block title %}Order History - Sohaib Restaurant{% endblock %}
 
 {% block content %}
-<h1 style="margin-bottom: 30px;"><i class="fas fa-history"></i> Order History</h1>
+<div class="mb-8 flex justify-between items-center border-b border-white/5 pb-4">
+    <h1 class="text-3xl font-display font-black text-white flex items-center gap-3">
+        <i class="bi bi-receipt text-brand-orange"></i> Order History
+    </h1>
+    {% if orders %}
+    <span class="text-xs text-neutral-400 font-semibold">{{ orders|length }} Order{% if orders|length != 1 %}s{% endif %}</span>
+    {% endif %}
+</div>
 
 {% if orders %}
-<div class="grid-cards" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     {% for order in orders %}
-    <div class="card" style="border-top: 4px solid {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% else %}var(--info){% endif %};">
-        <div class="card-body">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                <div>
-                    <h3 style="margin-bottom: 5px;">Order #{{ order.id }}</h3>
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">{{ order.created_at.strftime('%b %d, %Y - %I:%M %p') }}</p>
-                </div>
-                <div style="text-align: right;">
-                    <span style="display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(255,255,255,0.1); color: {% if order.status == 'delivered' %}var(--success){% elif order.status == 'cancelled' %}var(--danger){% else %}var(--info){% endif %};">
-                        {{ order.status_display }}
-                    </span>
-                </div>
+    <div class="card flex flex-col p-5 gap-4 border-t-2
+        {% if order.status == 'delivered' %}border-t-emerald-500
+        {% elif order.status == 'cancelled' %}border-t-red-500
+        {% else %}border-t-brand-orange{% endif %}">
+
+        <!-- Header -->
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="font-display font-black text-white text-base">Order #{{ order.id }}</h3>
+                <p class="text-xs text-neutral-500 mt-0.5">{{ order.created_at.strftime('%b %d, %Y · %I:%M %p') }}</p>
             </div>
-            
-            <div style="margin-bottom: 20px; min-height: 80px;">
-                <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #ddd;">
-                    {% for item in order.items[:3] %}
-                    <li style="margin-bottom: 5px;">{{ item.quantity }}x {{ item.menu_item.name }}</li>
-                    {% endfor %}
-                    {% if order.items|length > 3 %}
-                    <li style="color: var(--text-muted); font-style: italic;">...and {{ order.items|length - 3 }} more item(s)</li>
-                    {% endif %}
-                </ul>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid var(--border);">
-                <span style="font-weight: bold; font-size: 1.1rem; color: var(--accent);">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
-                <a href="{{ url_for('orders.track', order_id=order.id) }}" class="btn btn-primary btn-sm">
-                    View Details
-                </a>
-            </div>
+            <span class="text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full
+                {% if order.status == 'delivered' %}bg-emerald-500/15 text-emerald-400
+                {% elif order.status == 'cancelled' %}bg-red-500/15 text-red-400
+                {% elif order.status == 'preparing' %}bg-brand-orange/15 text-brand-orange
+                {% else %}bg-blue-500/15 text-blue-400{% endif %}">
+                {{ order.status_display }}
+            </span>
+        </div>
+
+        <!-- Items List -->
+        <div class="flex-1 border-t border-white/5 pt-4">
+            <ul class="flex flex-col gap-1.5 text-sm text-neutral-300">
+                {% for item in order.items[:3] %}
+                <li class="flex items-center gap-2">
+                    <span class="text-brand-orange font-bold text-xs">{{ item.quantity }}×</span>
+                    <span class="line-clamp-1">{{ item.menu_item.name }}</span>
+                </li>
+                {% endfor %}
+                {% if order.items|length > 3 %}
+                <li class="text-xs text-neutral-500 italic pl-5">…and {{ order.items|length - 3 }} more item(s)</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-between items-center border-t border-white/5 pt-4">
+            <span class="font-display font-black text-brand-orange text-base">Rs. {{ "%.0f"|format(order.total_amount) }}</span>
+            <a href="{{ url_for('orders.track', order_id=order.id) }}" class="btn btn-primary btn-sm text-xs px-4 py-2">
+                <i class="bi bi-geo-alt-fill"></i> View Details
+            </a>
         </div>
     </div>
     {% endfor %}
 </div>
+
 {% else %}
-<div style="text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border);">
-    <i class="bi bi-receipt" style="font-size: 4rem; color: var(--text-muted); margin-bottom: 20px;"></i>
-    <h2>No orders yet</h2>
-    <p style="color: var(--text-muted); margin-bottom: 30px;">When you place orders, they will appear here.</p>
-    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 30px;">
-        Order Now
+<!-- Empty State -->
+<div class="card py-20 px-6 text-center flex flex-col items-center gap-5 max-w-md mx-auto mt-8">
+    <div class="w-24 h-24 bg-neutral-900 border border-white/5 rounded-full flex items-center justify-center text-neutral-500 text-4xl">
+        <i class="bi bi-receipt"></i>
+    </div>
+    <div>
+        <h2 class="text-2xl font-display font-black text-white mb-2">No orders yet</h2>
+        <p class="text-sm text-neutral-400">When you place orders, they'll appear here.</p>
+    </div>
+    <a href="{{ url_for('menu.browse') }}" class="btn btn-primary shadow-orange-glow mt-2">
+        <i class="bi bi-basket2-fill"></i> Order Now
     </a>
 </div>
 {% endif %}
