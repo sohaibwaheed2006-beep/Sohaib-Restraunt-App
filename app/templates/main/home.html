@@ -3,49 +3,65 @@
 {% block title %}Home - Sohaib Restaurant{% endblock %}
 
 {% block extra_css %}
-<!-- Extra styling for home page custom effects -->
 <style>
     /* Pulse Badge Glow Animation */
     .pulse-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: var(--brand-red);
-        color: white;
-        padding: 5px 14px;
-        border-radius: 20px;
-        font-weight: 800;
-        font-size: 0.8rem;
-        box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.5);
+        position: absolute; top: 15px; right: 15px;
+        background: var(--brand-red); color: white;
+        padding: 5px 14px; border-radius: 20px;
+        font-weight: 800; font-size: 0.8rem;
+        box-shadow: 0 0 0 0 rgba(255,69,0,0.5);
         animation: badgePulse 2s infinite;
-        z-index: 10;
-        letter-spacing: 0.5px;
+        z-index: 10; letter-spacing: 0.5px;
     }
-    
     @keyframes badgePulse {
-        0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.7);
-        }
-        70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(255, 69, 0, 0);
-        }
-        100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(255, 69, 0, 0);
-        }
+        0%   { transform: scale(.95); box-shadow: 0 0 0 0   rgba(255,69,0,.7); }
+        70%  { transform: scale(1);   box-shadow: 0 0 0 10px rgba(255,69,0,0); }
+        100% { transform: scale(.95); box-shadow: 0 0 0 0   rgba(255,69,0,0); }
+    }
+    .float-bg { animation: floatAnim 6s ease-in-out infinite; }
+    @keyframes floatAnim {
+        0%   { transform: translateY(0)    rotate(0deg); }
+        50%  { transform: translateY(-15px) rotate(5deg); }
+        100% { transform: translateY(0)    rotate(0deg); }
     }
 
-    /* Floating background items */
-    .float-bg {
-        animation: floatAnim 6s ease-in-out infinite;
+    /* ── Exploded food viewer ── */
+    #hero-3d-container {
+        display: flex; align-items: center; justify-content: center;
+        position: relative; overflow: visible;
     }
-    @keyframes floatAnim {
-        0% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-15px) rotate(5deg); }
-        100% { transform: translateY(0) rotate(0deg); }
+    /* Smooth layer transition */
+    .layer-stack { transition: opacity .5s ease, transform .5s ease; }
+    .layer-label { transition: opacity .4s ease, transform .4s ease; }
+    /* Floating ingredients chip decals */
+    .hero-chip {
+        position: absolute; font-size: 2rem;
+        animation: chipFloat 5s ease-in-out infinite;
+        pointer-events: none; opacity: .55;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
     }
+    @keyframes chipFloat {
+        0%,100% { transform: translateY(0)    rotate(0deg); }
+        50%      { transform: translateY(-18px) rotate(12deg); }
+    }
+    /* Glow ring behind food */
+    .hero-glow-ring {
+        position: absolute;
+        width: 360px; height: 360px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,107,53,.22) 0%, rgba(255,107,53,.06) 55%, transparent 72%);
+        pointer-events: none;
+        animation: glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+        0%,100% { transform: scale(1);    opacity: .8; }
+        50%      { transform: scale(1.08); opacity: 1;  }
+    }
+    /* Hover-to-explode: show layers on parent hover */
+    #food-viewer:hover .hero-food-img { opacity: 0 !important; transform: scale(.7) !important; }
+    #food-viewer:hover .layer-stack    { opacity: 1 !important; transform: scale(1)  !important; }
+    #food-viewer:hover .layer-label    { opacity: 1 !important; transform: translateX(0) !important; }
 </style>
 {% endblock %}
 
@@ -91,19 +107,36 @@
             </div>
         </div>
         
-        <!-- Hero 3D Interactive Canvas -->
-        <div class="relative flex justify-center items-center h-[400px] md:h-[500px]">
-            <div id="hero-3d-container" class="w-full h-full cursor-grab active:cursor-grabbing relative z-10"></div>
-            
-            <!-- 3D Controls overlay -->
-            <div class="absolute bottom-6 flex bg-brand-charcoal/80 backdrop-blur border border-white/10 p-1.5 rounded-full z-20 shadow-glass">
-                <button onclick="window.food3D.setModel('burger'); this.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('bg-brand-orange')); this.classList.add('bg-brand-orange');" class="px-5 py-2 rounded-full text-xs font-black transition-all bg-brand-orange text-white shadow-orange-glow">Burger 🍔</button>
-                <button onclick="window.food3D.setModel('pizza'); this.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('bg-brand-orange')); this.classList.add('bg-brand-orange');" class="px-5 py-2 rounded-full text-xs font-black transition-all text-neutral-300 hover:text-white">Pizza 🍕</button>
+        <!-- Hero Animated Food Viewer -->
+        <div id="food-viewer" class="relative flex justify-center items-center h-[480px] md:h-[560px] cursor-pointer select-none">
+
+            <!-- Glowing radial backdrop -->
+            <div class="hero-glow-ring"></div>
+
+            <!-- Floating ingredient emoji decals -->
+            <span class="hero-chip" style="top:8%;  left:4%;  animation-delay:0s;   animation-duration:5.2s;">🧅</span>
+            <span class="hero-chip" style="top:18%; right:3%; animation-delay:1s;   animation-duration:4.6s;">🍅</span>
+            <span class="hero-chip" style="top:62%; left:2%;  animation-delay:2s;   animation-duration:6s;">🥬</span>
+            <span class="hero-chip" style="top:70%; right:5%; animation-delay:0.5s; animation-duration:5.8s;">🧀</span>
+            <span class="hero-chip" style="top:40%; left:0%;  animation-delay:3s;   animation-duration:4.8s;">🫙</span>
+            <span class="hero-chip" style="bottom:8%;left:8%; animation-delay:1.5s; animation-duration:5.5s;">🌿</span>
+
+            <!-- 3D Container -->
+            <div id="hero-3d-container" class="w-full h-full relative z-10"></div>
+
+            <!-- Model Toggle Pills -->
+            <div class="absolute bottom-5 flex bg-brand-charcoal/90 backdrop-blur border border-white/10 p-1.5 rounded-full z-20 shadow-glass gap-0.5">
+                <button id="btn-burger"
+                    onclick="window.food3D && window.food3D.setModel('burger'); document.getElementById('btn-burger').className='px-5 py-2 rounded-full text-xs font-black transition-all bg-brand-orange text-white shadow-orange-glow'; document.getElementById('btn-pizza').className='px-5 py-2 rounded-full text-xs font-black transition-all text-neutral-300 hover:text-white';"
+                    class="px-5 py-2 rounded-full text-xs font-black transition-all bg-brand-orange text-white shadow-orange-glow">Burger 🍔</button>
+                <button id="btn-pizza"
+                    onclick="window.food3D && window.food3D.setModel('pizza'); document.getElementById('btn-pizza').className='px-5 py-2 rounded-full text-xs font-black transition-all bg-brand-orange text-white shadow-orange-glow'; document.getElementById('btn-burger').className='px-5 py-2 rounded-full text-xs font-black transition-all text-neutral-300 hover:text-white';"
+                    class="px-5 py-2 rounded-full text-xs font-black transition-all text-neutral-300 hover:text-white">Pizza 🍕</button>
             </div>
-            
-            <!-- Exploded Layer Instruction -->
-            <div class="absolute top-4 text-center pointer-events-none text-[10px] text-neutral-500 font-bold uppercase tracking-widest bg-brand-dark/40 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/5 animate-pulse">
-                🖱️ Hover or Scroll to Explode Layers
+
+            <!-- Hover instruction badge -->
+            <div class="absolute top-3 pointer-events-none text-[9px] text-neutral-500 font-black uppercase tracking-widest bg-brand-dark/60 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/5">
+                ✦ Hover to Explode Layers
             </div>
         </div>
     </div>
