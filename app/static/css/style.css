@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sohaib Restaurant - Custom Global Stylesheet & Design System Override
+   BiteBuddy - Custom Global Stylesheet & Design System Override
    ========================================================================== */
 
 :root {
@@ -35,22 +35,43 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
-/* Glassmorphism Cards */
-.card {
-    background: rgba(18, 18, 21, 0.6) !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+/* Glassmorphism Cards & Dark Theme Overrides */
+.card, .deal-card, .menu-item-card, .category-card, div[class*="card"] {
+    background-color: #121215 !important;
+    background: linear-gradient(145deg, rgba(18, 18, 21, 0.95) 0%, rgba(24, 24, 30, 0.9) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: var(--transition-smooth);
     box-shadow: var(--shadow-glass);
+    color: var(--text-main) !important;
 }
 
-.card:hover {
-    transform: translateY(-8px) scale(1.01);
-    border-color: rgba(255, 107, 53, 0.25) !important;
-    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.15);
+.card:hover, .deal-card:hover, .menu-item-card:hover, .category-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 107, 53, 0.35) !important;
+    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.2) !important;
+}
+
+/* Card Typography & Menu Item Names */
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+.deal-card h3, .menu-item-card h3, .category-card h3,
+.card-title, .item-title {
+    color: #ffffff !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+}
+
+.card h3:hover, .deal-card h3:hover, .menu-item-card h3:hover,
+.card a:hover h3, .deal-card a:hover h3, .menu-item-card a:hover h3 {
+    color: var(--brand-orange) !important;
+}
+
+.card p, .deal-card p, .menu-item-card p, .category-card p,
+.card-text, .item-desc {
+    color: #a1a1aa !important;
 }
 
 /* Buttons System */

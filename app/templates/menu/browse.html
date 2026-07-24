@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Menu - Sohaib Restaurant{% endblock %}
+{% block title %}Menu - BiteBuddy{% endblock %}
 
 {% block content %}
 <div class="flex flex-col md:flex-row gap-8 items-start select-none">
@@ -57,15 +57,26 @@
         <!-- Catalog Grid -->
         <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for item in items %}
-            <div class="menu-item-card card flex flex-col">
+            <div class="menu-item-card card flex flex-col group border border-white/10 hover:border-brand-orange/40 transition-all duration-500">
                 <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="block relative overflow-hidden aspect-[4/3] rounded-t-3xl">
-                    <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover hover:scale-105 transition-all duration-500" onerror="this.src='/static/images/default_food.jpg'">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/static/images/default_food.jpg'">
+                    
+                    <!-- Rating badge -->
+                    <div class="absolute top-3 right-3 bg-brand-dark/80 backdrop-blur px-3 py-1 rounded-full text-xs font-black text-brand-gold flex items-center gap-1 border border-white/10">
+                        <i class="bi bi-star-fill text-yellow-400"></i> 4.9
+                    </div>
+                    
+                    {% if item.category %}
+                    <div class="absolute bottom-3 left-3 bg-brand-orange/90 backdrop-blur text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm">
+                        {{ item.category.name }}
+                    </div>
+                    {% endif %}
                 </a>
                 
                 <div class="p-6 flex flex-col flex-1 gap-3">
                     <div class="flex justify-between items-start gap-2">
-                        <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="hover:text-brand-orange transition-all">
-                            <h3 class="text-base font-bold text-white line-clamp-1 leading-snug">{{ item.name }}</h3>
+                        <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="hover:text-brand-orange transition-colors">
+                            <h3 class="text-base font-bold text-white group-hover:text-brand-orange transition-colors line-clamp-1 leading-snug">{{ item.name }}</h3>
                         </a>
                         <span class="text-base font-display font-black text-brand-orange flex-shrink-0">Rs. {{ "%.0f"|format(item.price) }}</span>
                     </div>
@@ -74,16 +85,16 @@
                         {{ item.description }}
                     </p>
                     
-                    <div class="mt-2 pt-3 border-t border-white/5">
+                    <div class="mt-2 pt-3 border-t border-white/10">
                         {% if current_user.is_authenticated %}
                         <form action="{{ url_for('cart.add_to_cart', item_id=item.id) }}" method="POST" class="add-to-cart-form w-full">
                             <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="btn btn-primary w-full shadow-md py-2.5 text-xs">
+                            <button type="submit" class="btn btn-primary w-full shadow-orange-glow py-3 text-xs font-bold">
                                 <i class="bi bi-cart-plus-fill"></i> Add to Cart
                             </button>
                         </form>
                         {% else %}
-                        <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-outline w-full py-2.5 text-xs">
+                        <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-outline w-full py-3 text-xs font-bold">
                             <i class="bi bi-box-arrow-in-right"></i> Login to Order
                         </a>
                         {% endif %}

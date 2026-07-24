@@ -1,5 +1,5 @@
 // ==========================================================================
-// Sohaib Restaurant - Global Frontend Logic & GSAP Motion Controller
+// BiteBuddy - Global Frontend Logic & GSAP Motion Controller
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {

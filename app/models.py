@@ -1,4 +1,4 @@
-"""Database models for Sohaib Restaurant."""
+"""Database models for BiteBuddy."""
 
 from datetime import datetime, timezone
 from flask_login import UserMixin

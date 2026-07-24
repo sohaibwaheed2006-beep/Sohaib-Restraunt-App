@@ -1,4 +1,4 @@
-"""Sohaib Restaurant Application Factory."""
+"""BiteBuddy Application Factory."""
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
