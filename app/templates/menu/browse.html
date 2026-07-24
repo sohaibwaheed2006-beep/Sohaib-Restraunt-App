@@ -57,12 +57,12 @@
         <!-- Catalog Grid -->
         <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for item in items %}
-            <div class="menu-item-card card flex flex-col group border border-white/10 hover:border-brand-orange/40 transition-all duration-500">
+            <div class="menu-item-card card flex flex-col group border border-white/10 hover:border-brand-orange/40 transition-all duration-500" style="background: #121215 !important;">
                 <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="block relative overflow-hidden aspect-[4/3] rounded-t-3xl">
                     <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='/static/images/default_food.jpg'">
                     
                     <!-- Rating badge -->
-                    <div class="absolute top-3 right-3 bg-brand-dark/80 backdrop-blur px-3 py-1 rounded-full text-xs font-black text-brand-gold flex items-center gap-1 border border-white/10">
+                    <div class="absolute top-3 right-3 bg-brand-dark/90 backdrop-blur px-3 py-1 rounded-full text-xs font-black text-brand-gold flex items-center gap-1 border border-white/10">
                         <i class="bi bi-star-fill text-yellow-400"></i> 4.9
                     </div>
                     
@@ -73,15 +73,15 @@
                     {% endif %}
                 </a>
                 
-                <div class="p-6 flex flex-col flex-1 gap-3">
+                <div class="p-6 flex flex-col flex-1 gap-3" style="background: #121215 !important;">
                     <div class="flex justify-between items-start gap-2">
-                        <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="hover:text-brand-orange transition-colors">
-                            <h3 class="text-base font-bold text-white group-hover:text-brand-orange transition-colors line-clamp-1 leading-snug">{{ item.name }}</h3>
+                        <a href="{{ url_for('menu.item_detail', item_id=item.id) }}" class="hover:text-brand-orange transition-colors block">
+                            <h3 class="text-base font-bold text-white group-hover:text-brand-orange transition-colors line-clamp-1 leading-snug block">{{ item.name }}</h3>
                         </a>
                         <span class="text-base font-display font-black text-brand-orange flex-shrink-0">Rs. {{ "%.0f"|format(item.price) }}</span>
                     </div>
                     
-                    <p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed flex-1">
+                    <p class="text-xs text-neutral-300 font-medium line-clamp-2 leading-relaxed flex-1">
                         {{ item.description }}
                     </p>
                     
