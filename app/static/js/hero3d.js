@@ -54,6 +54,7 @@ class Food3D {
             align-items: center;
             justify-content: center;
             overflow: visible;
+            perspective: 1000px;
         `;
 
         this._buildBurger();
@@ -62,9 +63,80 @@ class Food3D {
         // Show burger by default
         this.burgerEl.style.display = 'flex';
         this.pizzaEl.style.display = 'none';
+
+        this._setupMouse360();
     }
 
-    /* ── BURGER ── */
+    /* ── 360° MOUSE & TOUCH ROTATION CONTROLLER ── */
+    _setupMouse360() {
+        const viewer = document.getElementById('food-viewer') || this.container;
+        if (!viewer) return;
+
+        this.mouseIn = false;
+        this.targetRotY = 0;
+        this.targetRotX = 0;
+        this.currentRotY = 0;
+        this.currentRotX = 0;
+
+        viewer.addEventListener('mouseenter', () => {
+            this.mouseIn = true;
+        });
+
+        viewer.addEventListener('mousemove', (e) => {
+            const rect = viewer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const pctX = Math.max(0, Math.min(1, x / rect.width));
+            const pctY = Math.max(0, Math.min(1, y / rect.height));
+
+            // Full 360° horizontal rotation across cursor span (-180° to +180°)
+            this.targetRotY = (pctX - 0.5) * 360;
+            // 3D Pitch tilt (-25° to +25°)
+            this.targetRotX = (0.5 - pctY) * 35;
+        });
+
+        viewer.addEventListener('mouseleave', () => {
+            this.mouseIn = false;
+            this.targetRotY = 0;
+            this.targetRotX = 0;
+        });
+
+        // Touch swipe 360° support
+        viewer.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                const rect = viewer.getBoundingClientRect();
+                const pctX = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+                const pctY = Math.max(0, Math.min(1, (touch.clientY - rect.top) / rect.height));
+                this.targetRotY = (pctX - 0.5) * 360;
+                this.targetRotX = (0.5 - pctY) * 35;
+            }
+        }, { passive: true });
+    }
+
+    /* ── IDLE FLOAT & 360° ROTATION ANIMATION ── */
+    _startIdleAnimation() {
+        const activeWrap = () => this.currentModel === 'burger' ? this.burgerEl : this.pizzaEl;
+
+        const tick = (t) => {
+            const wrap = activeWrap();
+            if (wrap) {
+                // Lerp rotation smoothly for 60fps physics
+                this.currentRotY += (this.targetRotY - this.currentRotY) * 0.08;
+                this.currentRotX += (this.targetRotX - this.currentRotX) * 0.08;
+
+                const floatY = Math.sin(t * 0.002) * 10;
+                const floatRotZ = Math.sin(t * 0.001) * 1.5;
+
+                // Apply 360 degree 3D rotation transform
+                wrap.style.transformStyle = 'preserve-3d';
+                wrap.style.transform = `perspective(1000px) rotateY(${this.currentRotY}deg) rotateX(${this.currentRotX}deg) rotateZ(${floatRotZ}deg) translateY(${floatY}px)`;
+            }
+            this._rafId = requestAnimationFrame(tick);
+        };
+        this._rafId = requestAnimationFrame(tick);
+    }
     _buildBurger() {
         this.burgerEl = this._buildExplodedStack('burger', BURGER_LAYERS, '/static/images/hero_burger.png');
         this.container.appendChild(this.burgerEl);
